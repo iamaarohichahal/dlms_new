@@ -8,14 +8,32 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
     return render_template('login.html')
 
 @app.route('/register')
 def register():
     return render_template('register.html')
+
+@app.route('/user_dashboard')
+def user_dashboard():
+    return render_template('user_dashboard.html')
+
+@app.route('/view_borrowed_books')
+def view_borrowed_books():
+    return render_template('view_borrowed_books.html')
+
+@app.route('/browse_books')
+def browse_books():
+    return render_template('browse_books.html')
+
+@app.route('/return_books')
+def return_books():
+    return render_template('return_books.html')
+
+@app.route('/logout')
+def logout():
+    # Perform logout operations here
+    return render_template('logout.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
