@@ -7,18 +7,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Initialize the database
 def init_db():
     """
-    Initializes the SQLite database and creates tables if they do not exist.
+    Initializes the SQLite databases and creates tables if they do not exist.
     """
+    # Initialize the users database
     conn = sqlite3.connect('user.db')
     cursor = conn.cursor()
-    # Create users table
     cursor.execute('''
                    CREATE TABLE IF NOT EXISTS users(
                    id INTEGER PRIMARY KEY,
                    username TEXT UNIQUE NOT NULL,
                    password TEXT NOT NULL)
                    ''')
-    # Create books table
     cursor.execute('''
                    CREATE TABLE IF NOT EXISTS books(
                    id INTEGER PRIMARY KEY,
@@ -26,6 +25,18 @@ def init_db():
                    author TEXT NOT NULL,
                    year INTEGER NOT NULL,
                    isbn TEXT NOT NULL)
+                   ''')
+    conn.commit()
+    conn.close()
+
+    # Initialize the admin database
+    conn = sqlite3.connect('admin.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+                   CREATE TABLE IF NOT EXISTS admin(
+                   id INTEGER PRIMARY KEY,
+                   username TEXT UNIQUE NOT NULL,
+                   password TEXT NOT NULL)
                    ''')
     conn.commit()
     conn.close()
@@ -40,6 +51,23 @@ def register_user(username, password):
     try:
         # Insert new user into users table
         cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, hashed_password))
+        conn.commit()
+        messagebox.showinfo('Registration', 'Registration successful! Please log in.')
+        show_frame(login_frame)  # Show login frame after successful registration
+    except sqlite3.IntegrityError:
+        messagebox.showerror('Error', 'Username already exists')
+    conn.close()
+
+def register_admin(username, password):
+    """
+    Registers a new user with a hashed password.
+    """
+    conn = sqlite3.connect('admin.db')
+    cursor = conn.cursor()
+    hashed_password = generate_password_hash(password, method='sha256')
+    try:
+        # Insert new user into users table
+        cursor.execute('INSERT INTO admin (username, password) VALUES (?, ?)', (username, hashed_password))
         conn.commit()
         messagebox.showinfo('Registration', 'Registration successful! Please log in.')
         show_frame(login_frame)  # Show login frame after successful registration
@@ -62,6 +90,30 @@ def login_user(username, password):
         show_frame(user_dashboard_frame)
     else:
         messagebox.showerror('Error', 'Invalid username or password')
+
+def login_admin(username, password):
+    """
+    Logs in an admin by checking the username and password.
+    """
+    conn = sqlite3.connect('admin.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM admin WHERE username = ?', (username,))
+    admin = cursor.fetchone()
+    conn.close()
+
+    # Debugging prints
+    print(f"Admin record: {admin}")
+    print(f"Entered password: {password}")
+    print(f"Stored hash: {admin[2] if admin else 'None'}")
+    print(f"Password match: {check_password_hash(admin[2], password) if admin else 'None'}")
+
+    # Verify password and show admin dashboard if valid
+    if admin and check_password_hash(admin[2], password):
+        show_frame(admin_dashboard_frame)
+    else:
+        messagebox.showerror('Error', 'Invalid username or password')
+
+
 
 def add_book(title, author, year, isbn):
     """
@@ -165,6 +217,7 @@ init_db()
 login_frame = tk.Frame(app, bg='white')
 register_frame = tk.Frame(app, bg='white')
 user_dashboard_frame = tk.Frame(app, bg='white')
+admin_dashboard_frame = tk.Frame(app, bg='white')
 add_book_frame = tk.Frame(app, bg='white')
 browse_books_frame = tk.Frame(app, bg='white')
 profile_frame = tk.Frame(app, bg='white')
@@ -178,32 +231,44 @@ borrowing_history_frame = tk.Frame(app, bg='white')
 
 
 # Place all frames to occupy the full window
-for frame in (login_frame, register_frame, user_dashboard_frame, add_book_frame, browse_books_frame, profile_frame, deposit_book_frame, search_book_frame, account_details_frame, loan_details_frame, borrowing_history_frame, wishlist_frame):
+for frame in (login_frame, register_frame, user_dashboard_frame, add_book_frame, browse_books_frame, profile_frame, deposit_book_frame, search_book_frame, 
+              account_details_frame, loan_details_frame, borrowing_history_frame, wishlist_frame,admin_dashboard_frame):
     frame.place(relwidth=1, relheight=1)
 
 # Login Frame
-title = tk.Label(login_frame, text="Welcome to the Digital library!", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
+title = tk.Label(login_frame, text="Welcome to the Digital Library!", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
 title.place(x=0, y=0, relwidth=1, height=70)
 
-# Login button
-login_button = tk.Button(login_frame, text="Login", font=("Arial", 14), command=lambda: login_user(simpledialog.askstring("Login", "Enter username:"), simpledialog.askstring("Login", "Enter password:", show='*')))
-login_button.place(relx=0.5, rely=0.4, anchor='center')
+# Button for User Login
+user_login_button = tk.Button(login_frame, text="User Login", font=("Arial", 14), command=lambda: login_user(simpledialog.askstring("User Login", "Enter username:"), simpledialog.askstring("User Login", "Enter password:", show='*')))
+user_login_button.place(relx=0.5, rely=0.4, anchor='center')
 
-# Register button
+# Button for Admin Login
+admin_login_button = tk.Button(login_frame, text="Admin Login", font=("Arial", 14), command=lambda: login_admin(simpledialog.askstring("Admin Login", "Enter username:"), simpledialog.askstring("Admin Login", "Enter password:", show='*')))
+admin_login_button.place(relx=0.5, rely=0.5, anchor='center')
+
+# Button to Register (Show Register Frame)
 register_button = tk.Button(login_frame, text="Register", font=("Arial", 14), command=lambda: show_frame(register_frame))
-register_button.place(relx=0.5, rely=0.5, anchor='center')
-
+register_button.place(relx=0.5, rely=0.6, anchor='center')
 # Registration Frame
 title = tk.Label(register_frame, text="Add a New User", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
 title.place(x=0, y=0, relwidth=1, height=70)
 
-# Register button
-register_button = tk.Button(register_frame, text="Register", font=("Arial", 14), command=lambda: register_user(simpledialog.askstring("Register", "Enter username:"), simpledialog.askstring("Register", "Enter password:", show='*')))
-register_button.place(relx=0.5, rely=0.4, anchor='center')
+# Register button for User
+user_register_button = tk.Button(register_frame, text="Register User", font=("Arial", 14), command=lambda: register_user(simpledialog.askstring("Register User", "Enter username:"), simpledialog.askstring("Register User", "Enter password:", show='*')))
+user_register_button.place(relx=0.5, rely=0.4, anchor='center')
+
+# Register button for Admin
+admin_register_button = tk.Button(register_frame, text="Register Admin", font=("Arial", 14), command=lambda: register_admin(simpledialog.askstring("Register Admin", "Enter username:"), simpledialog.askstring("Register Admin", "Enter password:", show='*')))
+admin_register_button.place(relx=0.5, rely=0.5, anchor='center')
 
 # Back to Login button
 back_button = tk.Button(register_frame, text="Back to Login", font=("Arial", 14), command=lambda: show_frame(login_frame))
-back_button.place(relx=0.5, rely=0.5, anchor='center')
+back_button.place(relx=0.5, rely=0.6, anchor='center')
+
+# admin Dashboard Frame
+title = tk.Label(admin_dashboard_frame, text="Admin Dashboard", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
+title.place(x=0, y=0, relwidth=1, height=70)
 
 # User Dashboard Frame
 title = tk.Label(user_dashboard_frame, text="User Dashboard", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
