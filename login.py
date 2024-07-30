@@ -227,12 +227,20 @@ account_details_frame = tk.Frame(app, bg='white')
 wishlist_frame = tk.Frame(app, bg='white')
 loan_details_frame = tk.Frame(app, bg='white')
 borrowing_history_frame = tk.Frame(app, bg='white')
+admin_dashboard_frame = tk.Frame(app, bg="white")
+user_management_frame = tk.Frame(app, bg="white")
+book_management_frame = tk.Frame(app, bg="white")
+loan_management_frame = tk.Frame(app, bg="white")
+reports_frame = tk.Frame(app, bg="white")
+settings_frame = tk.Frame(app, bg="white")
+
 
 
 
 # Place all frames to occupy the full window
 for frame in (login_frame, register_frame, user_dashboard_frame, add_book_frame, browse_books_frame, profile_frame, deposit_book_frame, search_book_frame, 
-              account_details_frame, loan_details_frame, borrowing_history_frame, wishlist_frame,admin_dashboard_frame):
+              account_details_frame, loan_details_frame, borrowing_history_frame, wishlist_frame,admin_dashboard_frame, admin_dashboard_frame, user_management_frame, 
+              book_management_frame, loan_management_frame, reports_frame, settings_frame):
     frame.place(relwidth=1, relheight=1)
 
 # Login Frame
@@ -269,6 +277,53 @@ back_button.place(relx=0.5, rely=0.6, anchor='center')
 # admin Dashboard Frame
 title = tk.Label(admin_dashboard_frame, text="Admin Dashboard", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
 title.place(x=0, y=0, relwidth=1, height=70)
+
+user_management_button = tk.Button(admin_dashboard_frame, text="Manage Users", font=("Arial", 14), command=lambda: show_frame(user_management_frame))
+user_management_button.place(relx=0.5, rely=0.3, anchor='center')
+
+# Button to go back to the admin dashboard
+back_button = tk.Button(user_management_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(admin_dashboard_frame))
+back_button.place(relx=0.5, rely=0.9, anchor='center')
+
+book_management_button = tk.Button(admin_dashboard_frame, text="Manage Books", font=("Arial", 14), command=lambda: show_frame(book_management_frame))
+book_management_button.place(relx=0.5, rely=0.4, anchor='center')
+
+# Button to go back to the admin dashboard
+back_button = tk.Button(book_management_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(admin_dashboard_frame))
+back_button.place(relx=0.5, rely=0.9, anchor='center')
+
+loan_management_button = tk.Button(admin_dashboard_frame, text="Manage Loans", font=("Arial", 14), command=lambda: show_frame(loan_management_frame))
+loan_management_button.place(relx=0.5, rely=0.5, anchor='center')
+
+# Button to go back to the admin dashboard
+back_button = tk.Button(loan_management_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(admin_dashboard_frame))
+back_button.place(relx=0.5, rely=0.9, anchor='center')
+
+
+# User Management Frame
+user_management_label = tk.Label(user_management_frame, text="User Management", font=("Arial", 20), bg="lightgrey")
+user_management_label.pack(pady=10)
+# Add additional widgets for managing users
+
+# Book Management Frame
+book_management_label = tk.Label(book_management_frame, text="Book Management", font=("Arial", 20), bg="lightblue")
+book_management_label.pack(pady=10)
+# Add additional widgets for managing books
+
+# Loan Management Frame
+loan_management_label = tk.Label(loan_management_frame, text="Loan Management", font=("Arial", 20), bg="lightgreen")
+loan_management_label.pack(pady=10)
+# Add additional widgets for managing loans
+
+# Reports Frame
+reports_label = tk.Label(reports_frame, text="Reports", font=("Arial", 20), bg="lightyellow")
+reports_label.pack(pady=10)
+# Add additional widgets for reports and analytics
+
+# Settings Frame
+settings_label = tk.Label(settings_frame, text="Settings", font=("Arial", 20), bg="lightcoral")
+settings_label.pack(pady=10)
+# Add additional widgets for system settings
 
 # User Dashboard Frame
 title = tk.Label(user_dashboard_frame, text="User Dashboard", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
