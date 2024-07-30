@@ -10,10 +10,18 @@ def init_db():
     conn = sqlite3.connect('user.db')
     cursor = conn.cursor()
     cursor.execute('''
-                   CREATE TABLE IF NOT EXISTS Admin_KPSTR(
+                   CREATE TABLE IF NOT EXISTS users(
                    id INTEGER PRIMARY KEY,
                    username TEXT UNIQUE NOT NULL,
                    password TEXT NOT NULL)
+                   ''')
+    cursor.execute('''
+                   CREATE TABLE IF NOT EXISTS books(
+                   id INTEGER PRIMARY KEY,
+                   title TEXT NOT NULL,
+                   author TEXT NOT NULL,
+                   year INTEGER NOT NULL,
+                   isbn TEXT NOT NULL)
                    ''')
     conn.commit()
     conn.close()
@@ -31,7 +39,7 @@ def login():
         password = request.form['password']
         conn = sqlite3.connect('user.db')
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM Admin_KPSTR WHERE username = ?', (username,))
+        cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
         user = cursor.fetchone()
         conn.close()
         
@@ -53,7 +61,7 @@ def register():
         conn = sqlite3.connect('user.db')
         cursor = conn.cursor()
         try:
-            cursor.execute('INSERT INTO Admin_KPSTR (username, password) VALUES (?, ?)', (username, hashed_password))
+            cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, hashed_password))
             conn.commit()
             flash('Registration successful! Please log in.')
             return redirect(url_for('login'))
@@ -66,37 +74,79 @@ def register():
 def user_dashboard():
     if 'username' in session:
         return render_template('user_dashboard.html', username=session['username'])
-    return redirect(url_for('login'))
+    else:
+        flash('Please log in to access this page.')
+        return redirect(url_for('login'))
 
 @app.route('/view_borrowed_books')
 def view_borrowed_books():
     if 'username' in session:
         return render_template('view_borrowed_books.html')
-    return redirect(url_for('login'))
+    else:
+        flash('Please log in to access this page.')
+        return redirect(url_for('login'))
 
 @app.route('/browse_books')
 def browse_books():
     if 'username' in session:
-        return render_template('browse_books.html')
-    return redirect(url_for('login'))
+        conn = sqlite3.connect('user.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM books')
+        books = cursor.fetchall()
+        conn.close()
+        return render_template('browse_books.html', books=books)
+    else:
+        flash('Please log in to access this page.')
+        return redirect(url_for('login'))
+
+@app.route('/view_book_details/<int:book_id>')
+def view_book_details(book_id):
+    if 'username' in session:
+        conn = sqlite3.connect('user.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM books WHERE id = ?', (book_id,))
+        book = cursor.fetchone()
+        conn.close()
+        return render_template('view_book_details.html', book=book)
+    else:
+        flash('Please log in to access this page.')
+        return redirect(url_for('login'))
+
+@app.route('/add_book', methods=['GET', 'POST'])
+def add_book():
+    if 'username' in session:
+        if request.method == 'POST':
+            title = request.form['title']
+            author = request.form['author']
+            year = request.form['year']
+            isbn = request.form['isbn']
+
+            conn = sqlite3.connect('user.db')
+            cursor = conn.cursor()
+            cursor.execute('INSERT INTO books (title, author, year, isbn) VALUES (?, ?, ?, ?)', 
+                           (title, author, year, isbn))
+            conn.commit()
+            conn.close()
+            flash('Book added successfully')
+            return redirect(url_for('browse_books'))
+        return render_template('add_book.html')
+    else:
+        flash('Please log in to access this page.')
+        return redirect(url_for('login'))
 
 @app.route('/return_books')
 def return_books():
     if 'username' in session:
         return render_template('return_books.html')
-    return redirect(url_for('login'))
+    else:
+        flash('Please log in to access this page.')
+        return redirect(url_for('login'))
 
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     session.pop('username', None)
     flash('You have been logged out.')
-    return redirect(url_for('login'))
-
-@app.route('/view_book_details/<int:book_id>')
-def view_book_details(book_id):
-    if 'username' in session:
-        return render_template('view_book_details.html', book_id=book_id)
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
