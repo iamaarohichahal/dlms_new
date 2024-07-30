@@ -3,60 +3,24 @@ import tkinter as tk
 from tkinter import messagebox, simpledialog
 from tkinter import Button, TOP, X
 from werkzeug.security import generate_password_hash, check_password_hash
+from db_utils import init_db
+from user_managment import register_user
 
-# Initialize the database
-def init_db():
-    """
-    Initializes the SQLite databases and creates tables if they do not exist.
-    """
-    # Initialize the users database
-    conn = sqlite3.connect('user.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-                   CREATE TABLE IF NOT EXISTS users(
-                   id INTEGER PRIMARY KEY,
-                   username TEXT UNIQUE NOT NULL,
-                   password TEXT NOT NULL)
-                   ''')
-    cursor.execute('''
-                   CREATE TABLE IF NOT EXISTS books(
-                   id INTEGER PRIMARY KEY,
-                   title TEXT NOT NULL,
-                   author TEXT NOT NULL,
-                   year INTEGER NOT NULL,
-                   isbn TEXT NOT NULL)
-                   ''')
-    conn.commit()
-    conn.close()
 
-    # Initialize the admin database
-    conn = sqlite3.connect('admin.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-                   CREATE TABLE IF NOT EXISTS admin(
-                   id INTEGER PRIMARY KEY,
-                   username TEXT UNIQUE NOT NULL,
-                   password TEXT NOT NULL)
-                   ''')
-    conn.commit()
-    conn.close()
+def local_register_user(username, password):
+    status = register_user(username, password)
 
-def register_user(username, password):
-    """
-    Registers a new user with a hashed password.
-    """
-    conn = sqlite3.connect('user.db')
-    cursor = conn.cursor()
-    hashed_password = generate_password_hash(password, method='sha256')
-    try:
-        # Insert new user into users table
-        cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, hashed_password))
-        conn.commit()
+    if status == 'true':
+        
         messagebox.showinfo('Registration', 'Registration successful! Please log in.')
         show_frame(login_frame)  # Show login frame after successful registration
-    except sqlite3.IntegrityError:
-        messagebox.showerror('Error', 'Username already exists')
-    conn.close()
+        
+    else:
+        
+             messagebox.showerror('Error', 'Username already exists')
+        
+
+
 
 def register_admin(username, password):
     """
@@ -205,6 +169,15 @@ def show_frame(frame):
     """
     frame.tkraise()
 
+# Function to fetch user data from the database
+def fetch_user_data():
+    conn = sqlite3.connect('library.db')  # Replace with your actual database file
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users")  # Replace 'users' with your actual table name
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+    
 # Initialize the Tkinter application
 app = tk.Tk()
 app.title("Library Management System")
@@ -263,7 +236,7 @@ title = tk.Label(register_frame, text="Add a New User", font=("times new roman",
 title.place(x=0, y=0, relwidth=1, height=70)
 
 # Register button for User
-user_register_button = tk.Button(register_frame, text="Register User", font=("Arial", 14), command=lambda: register_user(simpledialog.askstring("Register User", "Enter username:"), simpledialog.askstring("Register User", "Enter password:", show='*')))
+user_register_button = tk.Button(register_frame, text="Register User", font=("Arial", 14), command=lambda: local_register_user(simpledialog.askstring("Register User", "Enter username:"), simpledialog.askstring("Register User", "Enter password:", show='*')))
 user_register_button.place(relx=0.5, rely=0.4, anchor='center')
 
 # Register button for Admin
