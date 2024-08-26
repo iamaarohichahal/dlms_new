@@ -1,5 +1,6 @@
 import sqlite3
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox, simpledialog
 from tkinter import Button, TOP, X
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -109,6 +110,32 @@ def add_book_ui():
     for widget in add_book_frame.winfo_children():
         widget.destroy()  # Clear any existing widgets in the frame
 
+
+def edit_user(username):
+    # Implement user edit functionality here
+    new_username = simpledialog.askstring("Edit User", f"Edit username for {username}:")
+    new_email = simpledialog.askstring("Edit Email", f"Edit email for {username}:")
+    # Update user data (in actual implementation, update database)
+    for user in users:
+        if user["username"] == username:
+            user["username"] = new_username
+            user["email"] = new_email
+    populate_user_table()
+
+def delete_user(username):
+    # Implement user delete functionality here
+    if messagebox.askyesno("Delete User", f"Are you sure you want to delete {username}?"):
+        # Delete user data (in actual implementation, delete from database)
+        global users
+        users = [user for user in users if user["username"] != username]
+        populate_user_table()
+
+def populate_user_table():
+    for row in user_table.get_children():
+        user_table.delete(row)
+    for user in users:
+        user_table.insert("", "end", values=(user["username"], user["email"], "Edit", "Delete"))
+
     # Create and place UI elements for book details
     title_label = tk.Label(add_book_frame, text="Title", font=("Arial", 12))
     title_label.place(relx=0.5, rely=0.2, anchor='center')
@@ -210,6 +237,8 @@ settings_frame = tk.Frame(app, bg="white")
 
 
 
+
+
 # Place all frames to occupy the full window
 for frame in (login_frame, register_frame, user_dashboard_frame, add_book_frame, browse_books_frame, profile_frame, deposit_book_frame, search_book_frame, 
               account_details_frame, loan_details_frame, borrowing_history_frame, wishlist_frame,admin_dashboard_frame, admin_dashboard_frame, user_management_frame, 
@@ -254,6 +283,65 @@ title.place(x=0, y=0, relwidth=1, height=70)
 user_management_button = tk.Button(admin_dashboard_frame, text="Manage Users", font=("Arial", 14), command=lambda: show_frame(user_management_frame))
 user_management_button.place(relx=0.5, rely=0.3, anchor='center')
 
+#user managment table in admin dashboard
+
+id_label = tk.Label(user_management_frame, font=("Arial", 14), text="User ID", bg="#69359c", fg="white")
+id_label.place(x=20, y=50)
+
+id_enter = tk.Entry(user_management_frame, font=("Arial", 14), bd=2, width=25, bg="#69359c", fg="white")
+id_enter.place(x=150, y=50)
+
+username_label = tk.Label(user_management_frame, font=("Arial", 14), text="Username", bg="#69359c", fg="white")
+username_label.place(x=20, y=110)
+
+username_enter = tk.Entry(user_management_frame, font=("Arial", 14), bd=2, width=25, bg="#69359c", fg="white")
+username_enter.place(x=150, y=110)
+
+password_label = tk.Label(user_management_frame, font=("Arial", 14), text="Password", bg="#69359c", fg="white")
+password_label.place(x=20, y=170)
+
+password_enter = tk.Entry(user_management_frame, font=("Arial", 14), bd=2, width=25, bg="#69359c", fg="white")
+password_enter.place(x=150, y=170)
+
+add_user_button = tk.Button(user_management_frame,font = ("Arial",14) ,text="Add User")
+add_user_button.place(x=20,y=300)
+
+edit_user_button = tk.Button(user_management_frame, font = ("Arial",14) ,text="Edit User")
+edit_user_button.place(x=20,y=400)
+
+view_user_button = tk.Button(user_management_frame, font = ("Arial",14) ,text="View User")
+view_user_button.place(x=20,y=500)
+
+delete_user_button = tk.Button(user_management_frame, font = ("Arial",14) ,text="Delete User")
+delete_user_button.place(x=20,y=600)
+
+# User Management Frame Styling
+style = ttk.Style(user_management_frame)
+
+style.theme_use('clam')
+style.configure('Treeview', font=("Arial", 14))
+style.map('Treeview', background=[('selected', '#1A8F2D')])
+
+# Creating the Treeview widget
+tree = ttk.Treeview(user_management_frame, height=30)
+
+# Defining columns
+tree['columns'] = ('ID', 'Username', 'Password')
+
+tree.column('#0', width=0, stretch=tk.NO)
+tree.column('ID', anchor=tk.CENTER, width=150)
+tree.column('Username', anchor=tk.CENTER, width=350)
+tree.column('Password', anchor=tk.CENTER, width=350)
+
+# Defining headings
+tree.heading('ID', text='ID')
+tree.heading('Username', text='Username')
+tree.heading('Password', text='Password')
+
+# Placing the Treeview widget
+tree.place(x=450, y=50)
+
+
 # Button to go back to the admin dashboard
 back_button = tk.Button(user_management_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(admin_dashboard_frame))
 back_button.place(relx=0.5, rely=0.9, anchor='center')
@@ -272,16 +360,21 @@ loan_management_button.place(relx=0.5, rely=0.5, anchor='center')
 back_button = tk.Button(loan_management_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(admin_dashboard_frame))
 back_button.place(relx=0.5, rely=0.9, anchor='center')
 
+btn_logout_admin = tk.Button(admin_dashboard_frame, text="Logout", font=("times new roman", 12, "bold"), bg="white", width=15, command=lambda: show_frame(login_frame))
+btn_logout_admin.place(relx=0.5, rely=0.6, anchor='center')
+
 
 # User Management Frame
 user_management_label = tk.Label(user_management_frame, text="User Management", font=("Arial", 20), bg="lightgrey")
 user_management_label.pack(pady=10)
-# Add additional widgets for managing users
+
+
+
 
 # Book Management Frame
 book_management_label = tk.Label(book_management_frame, text="Book Management", font=("Arial", 20), bg="lightblue")
 book_management_label.pack(pady=10)
-# Add additional widgets for managing books
+
 
 # Loan Management Frame
 loan_management_label = tk.Label(loan_management_frame, text="Loan Management", font=("Arial", 20), bg="lightgreen")
@@ -296,7 +389,7 @@ reports_label.pack(pady=10)
 # Settings Frame
 settings_label = tk.Label(settings_frame, text="Settings", font=("Arial", 20), bg="lightcoral")
 settings_label.pack(pady=10)
-# Add additional widgets for system settings
+
 
 # User Dashboard Frame
 title = tk.Label(user_dashboard_frame, text="User Dashboard", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
@@ -318,6 +411,10 @@ btn_deposit_book.pack(side=tk.RIGHT, padx=5, pady=5)
 
 btn_my_profile = tk.Button(DashboardMenu, text="My Profile", font=("times new roman", 12, "bold"), bg="white", width=15, command=lambda: show_frame(profile_frame))
 btn_my_profile.pack(side=tk.RIGHT, padx=5, pady=5)
+
+btn_logout = tk.Button(DashboardMenu, text="Logout", font=("times new roman", 12, "bold"), bg="white", width=15, command=lambda: show_frame(login_frame))
+btn_logout.pack(side=tk.RIGHT, padx=5, pady=5)
+
 
 # Button to go back to the user dashboard
 back_button = tk.Button(profile_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(user_dashboard_frame))
