@@ -36,3 +36,18 @@ def init_db():
                    ''')
     conn.commit()
     conn.close() 
+
+
+    # Initialize the books database
+conn = sqlite3.connect('books.db')
+cursor = conn.cursor()
+cursor.execute('''
+               CREATE TABLE IF NOT EXISTS books(
+               id INTEGER PRIMARY KEY,
+               isbn TEXT UNIQUE NOT NULL,
+               title TEXT NOT NULL,
+               author TEXT NOT NULL,
+               status TEXT NOT NULL)
+               ''')
+conn.commit()
+conn.close()
