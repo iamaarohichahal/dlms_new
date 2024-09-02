@@ -4,6 +4,7 @@ from tkinter import messagebox, simpledialog
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
+
 def register_user(username, password):
     """
     Registers a new user with a hashed password.

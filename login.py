@@ -1,11 +1,17 @@
 import sqlite3
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox, simpledialog
-from tkinter import Button, TOP, X
+from tkinter import messagebox, simpledialog , END, Button, TOP, X , ttk
 from werkzeug.security import generate_password_hash, check_password_hash
-from db_utils import init_db
+from db_utils import Database
 from user_managment import register_user
+
+
+
+# Create an instance of the Database class and initialize it
+database = Database('user.db')
+database.init_db()
+database.close()
+
 
 # -------------------------------------------
 # Function Definitions
@@ -86,31 +92,6 @@ def login_admin(username, password):
     else:
         messagebox.showerror('Error', 'Invalid username or password')
 
-def add_book(title, author, year, isbn):
-    """
-    Adds a new book to the books table in user.db.
-    Displays a success message upon successful insertion.
-    """
-    conn = sqlite3.connect('user.db')
-    cursor = conn.cursor()
-    cursor.execute('INSERT INTO books (title, author, year, isbn) VALUES (?, ?, ?, ?)', 
-                   (title, author, year, isbn))
-    conn.commit()
-    conn.close()
-    messagebox.showinfo('Add Book', 'Book added successfully')
-
-def browse_books():
-    """
-    Retrieves all books from the books table in user.db.
-    Returns a list of all books.
-    """
-    conn = sqlite3.connect('user.db')
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM books')
-    books = cursor.fetchall()
-    conn.close()
-    return books
-
 def add_book_ui():
     """
     Sets up the UI elements for adding a new book.
@@ -120,36 +101,7 @@ def add_book_ui():
     for widget in add_book_frame.winfo_children():
         widget.destroy()
     
-    # Create and place UI elements for book details
-    title_label = tk.Label(add_book_frame, text="Title", font=("Arial", 12))
-    title_label.place(relx=0.5, rely=0.2, anchor='center')
-    title_entry = tk.Entry(add_book_frame, font=("Arial", 12))
-    title_entry.place(relx=0.5, rely=0.3, anchor='center')
-
-    author_label = tk.Label(add_book_frame, text="Author", font=("Arial", 12))
-    author_label.place(relx=0.5, rely=0.4, anchor='center')
-    author_entry = tk.Entry(add_book_frame, font=("Arial", 12))
-    author_entry.place(relx=0.5, rely=0.5, anchor='center')
-
-    year_label = tk.Label(add_book_frame, text="Year", font=("Arial", 12))
-    year_label.place(relx=0.5, rely=0.6, anchor='center')
-    year_entry = tk.Entry(add_book_frame, font=("Arial", 12))
-    year_entry.place(relx=0.5, rely=0.7, anchor='center')
-
-    isbn_label = tk.Label(add_book_frame, text="ISBN", font=("Arial", 12))
-    isbn_label.place(relx=0.5, rely=0.8, anchor='center')
-    isbn_entry = tk.Entry(add_book_frame, font=("Arial", 12))
-    isbn_entry.place(relx=0.5, rely=0.9, anchor='center')
-
-    # Button to add the book
-    add_button = tk.Button(add_book_frame, text="Add Book", font=("Arial", 14), command=lambda: add_book(
-        title_entry.get(),
-        author_entry.get(),
-        year_entry.get(),
-        isbn_entry.get()
-    ))
-    add_button.place(relx=0.5, rely=0.95, anchor='center')
-
+    
     # Button to go back to the user dashboard
     back_button = tk.Button(add_book_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(user_dashboard_frame))
     back_button.place(relx=0.5, rely=1.0, anchor='center')
@@ -177,61 +129,33 @@ def display_books(books):
     show_frame(browse_books_frame)  # Show browse books frame
 
 def show_frame(frame):
+
     """
     Brings the specified frame to the front, making it visible.
     """
     frame.tkraise()
 
-def fetch_user_data():
-    """
-    Fetches user data from the library.db database.
-    Returns a list of all users.
-    """
-    conn = sqlite3.connect('library.db')  # Replace with your actual database file
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users")  # Replace 'users' with your actual table name
-    rows = cursor.fetchall()
-    conn.close()
-    return rows
-
-def edit_user(username):
-    """
-    Allows editing of a user's username and email through simple dialogs.
-    Updates the user data and refreshes the user table display.
-    """
-    # Prompt for new username and email
-    new_username = simpledialog.askstring("Edit User", f"Edit username for {username}:")
-    new_email = simpledialog.askstring("Edit Email", f"Edit email for {username}:")
-    # Update user data (in actual implementation, update database)
+def add_to_user_treeview():
+    database = Database('user.db')
+    users = database.fetch_users()
+    tree.delete(*tree.get_children())
     for user in users:
-        if user["username"] == username:
-            user["username"] = new_username
-            user["email"] = new_email
-    populate_user_table()
+        tree.insert('', 'end', values=user)
 
-def delete_user(username):
-    """
-    Deletes a user after confirmation.
-    Updates the user data and refreshes the user table display.
-    """
-    # Confirm deletion
-    if messagebox.askyesno("Delete User", f"Are you sure you want to delete {username}?"):
-        # Delete user data (in actual implementation, delete from database)
-        global users
-        users = [user for user in users if user["username"] != username]
-        populate_user_table()
+def insert_user_treeview():
+    database = Database('user.db')
+    id = id_enter.get()
+    username = username_enter.get()
+    password = password_enter.get()
+    if not (id and username and password):
+        messagebox.showerror('Error', 'Please enter all the fields')
+    else:
+        database.insert_user(id, username, password)
+        add_to_user_treeview()
+        messagebox.showinfo('Success', "Your data has been inserted")
 
-def populate_user_table():
-    """
-    Populates the user management table with current user data.
-    Clears existing entries before populating new ones.
-    """
-    # Clear existing rows
-    for row in user_table.get_children():
-        user_table.delete(row)
-    # Insert user data into the table
-    for user in users:
-        user_table.insert("", "end", values=(user["username"], user["email"], "Edit", "Delete"))
+
+
 
 # -------------------------------------------
 # Application Initialization
@@ -242,8 +166,6 @@ app = tk.Tk()
 app.title("Library Management System")
 app.geometry("600x400")
 
-# Initialize the database
-init_db()
 
 # -------------------------------------------
 # Frame Definitions
@@ -383,7 +305,7 @@ password_enter = tk.Entry(user_management_frame, font=("Arial", 14), bd=2, width
 password_enter.place(x=150, y=170)
 
 # Buttons for User Management Actions
-add_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="Add User")
+add_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="Add User", command=insert_user_treeview)
 add_user_button.place(x=20, y=300)
 
 edit_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="Edit User")
@@ -420,6 +342,8 @@ tree.heading('Password', text='Password')
 
 # Placing the Treeview widget
 tree.place(x=450, y=50)
+
+add_to_user_treeview()
 
 # Back button to return to Admin Dashboard
 back_button = tk.Button(user_management_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(admin_dashboard_frame))

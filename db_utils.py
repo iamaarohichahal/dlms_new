@@ -1,53 +1,57 @@
+# db_utils.py
 import sqlite3
 
-# Initialize the database
-def init_db():
-    """
-    Initializes the SQLite databases and creates tables if they do not exist.
-    """
-    # Initialize the users database
-    conn = sqlite3.connect('user.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-                   CREATE TABLE IF NOT EXISTS users(
-                   id INTEGER PRIMARY KEY,
-                   username TEXT UNIQUE NOT NULL,
-                   password TEXT NOT NULL)
-                   ''')
-    cursor.execute('''
-                   CREATE TABLE IF NOT EXISTS books(
-                   id INTEGER PRIMARY KEY,
-                   title TEXT NOT NULL,
-                   author TEXT NOT NULL,
-                   year INTEGER NOT NULL,
-                   isbn TEXT NOT NULL)
-                   ''')
-    conn.commit()
-    conn.close()
+class Database:
+    def __init__(self, db_name):
+        self.conn = sqlite3.connect(db_name)
+        self.cursor = self.conn.cursor()
 
-    # Initialize the admin database
-    conn = sqlite3.connect('admin.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-                   CREATE TABLE IF NOT EXISTS admin(
-                   id INTEGER PRIMARY KEY,
-                   username TEXT UNIQUE NOT NULL,
-                   password TEXT NOT NULL)
-                   ''')
-    conn.commit()
-    conn.close() 
+    def init_db(self):
+        """
+        Initializes the SQLite databases and creates tables if they do not exist.
+        """
+        self.cursor.execute('''
+                       CREATE TABLE IF NOT EXISTS users(
+                       id INTEGER PRIMARY KEY,
+                       username TEXT UNIQUE NOT NULL,
+                       password TEXT NOT NULL)
+                       ''')
+        
+        self.cursor.execute('''
+                       CREATE TABLE IF NOT EXISTS books(
+                       id INTEGER PRIMARY KEY,
+                       isbn TEXT UNIQUE NOT NULL,
+                       title TEXT NOT NULL,
+                       author TEXT NOT NULL,
+                       status TEXT NOT NULL)
+                       ''')
 
+        self.cursor.execute('''
+                       CREATE TABLE IF NOT EXISTS admin(
+                       id INTEGER PRIMARY KEY,
+                       username TEXT UNIQUE NOT NULL,
+                       password TEXT NOT NULL)
+                       ''')
 
-    # Initialize the books database
-conn = sqlite3.connect('books.db')
-cursor = conn.cursor()
-cursor.execute('''
-               CREATE TABLE IF NOT EXISTS books(
-               id INTEGER PRIMARY KEY,
-               isbn TEXT UNIQUE NOT NULL,
-               title TEXT NOT NULL,
-               author TEXT NOT NULL,
-               status TEXT NOT NULL)
-               ''')
-conn.commit()
-conn.close()
+        self.conn.commit()
+
+    def fetch_users(self):
+        """
+        Fetches all users from the 'users' table.
+        """
+        self.cursor.execute("SELECT * FROM users")
+        return self.cursor.fetchall()
+
+    def insert_user(self, id, username, password):
+        """
+        Inserts a new user into the 'users' table.
+        """
+        self.cursor.execute('INSERT INTO users (id, username, password) VALUES (?, ?, ?)',
+                            (id, username, password))
+        self.conn.commit()
+
+    def close(self):
+        """
+        Closes the database connection.
+        """
+        self.conn.close()
