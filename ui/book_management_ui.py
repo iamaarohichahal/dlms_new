@@ -1,8 +1,29 @@
 import tkinter as tk
 from tkinter import ttk, messagebox 
 from ui.common import show_frame
+from db_utils import Database
 
 
+def add_to_book_treeview(tree):
+    database = Database('books.db')
+    books = database.fetch_books()
+    tree.delete(*tree.get_children())
+    for user in books:
+        tree.insert('', 'end', values=books)
+
+
+def insert_book_treeview(isbn_enter,book_title_enter, book_author_enter,book_status_enter,tree):
+    database = Database('user.db')
+    isbn = isbn_enter.get()
+    title = book_title_enter.get()
+    author = book_author_enter.get()
+    status = book_status_enter.get()
+    if not (isbn and title and author and status):
+        messagebox.showerror('Error', 'Please enter all the fields')
+    else:
+        database.insert_user(isbn, title, author, status)
+        add_to_book_treeview(tree)
+        messagebox.showinfo('Success', "Your data has been inserted")
 
 # -------------------------------------------
 # Book Management Frame Setup
@@ -38,7 +59,7 @@ def setUp_book_management(book_management_frame,admin_dashboard_frame):
     book_status_enter.place(x=150, y=230)
 
     # Buttons for User Management Actions
-    add_book_button = tk.Button(book_management_frame, font=("Arial", 14), text="Add Book")
+    add_book_button = tk.Button(book_management_frame, font=("Arial", 14), text="Add Book",command=lambda:insert_book_treeview(isbn_enter,book_title_enter, book_author_enter,book_status_enter,tree))
     add_book_button.place(x=20, y=340)
 
     edit_book_button = tk.Button(book_management_frame, font=("Arial", 14), text="Edit Book")

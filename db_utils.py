@@ -50,8 +50,40 @@ class Database:
                             (id, username, password))
         self.conn.commit()
 
+    def fetch_books(self):
+        """
+        Fetches all books from the 'books' table.
+        """
+        self.cursor.execute("SELECT * FROM books")
+        return self.cursor.fetchall()
+
+    def insert_book(self, isbn, title, author, status):
+        """
+        Inserts a new user into the 'users' table.
+        """
+        self.cursor.execute('INSERT INTO books (isbn,title,author, status) VALUES (?, ?, ?)',
+                            (isbn,title,author, status))
+        self.conn.commit()
+
+    def delete_user(id):
+        conn =sqlite3.connect("user.db")
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM users WHERE id = ?', (id,))
+        conn.commit()
+        conn.close()
+
+    def update_user(new_username, new_password, id):
+        conn = sqlite3.connect('user.db')
+        cursor = conn.cursor()
+
+        cursor.execute("UPDATE users SET username = ?, password = ? WHERE id = ?", 
+                    (new_username, new_password, id))
+        
+        conn.commit()
+        conn.close()
+
     def close(self):
-        """
-        Closes the database connection.
-        """
-        self.conn.close()
+            """
+            Closes the database connection.
+            """
+            self.conn.close()

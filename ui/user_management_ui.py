@@ -1,10 +1,29 @@
 import tkinter as tk
-from tkinter import ttk, messagebox 
+from tkinter import ttk, messagebox, END
 from ui.common import show_frame
 from db_utils import Database
 
 
-def add_to_user_treeview(tree):
+def clear (id_enter, username_enter, password_enter):
+    id_enter.delete(0,END)
+    username_enter.delete(0,END)
+    password_enter.delete(0,END)
+
+def display_user_data(event,tree,id_enter, username_enter, password_enter):
+    print("row is selected")
+    selected_item = tree.focus()
+    if selected_item:
+        row = tree.item(selected_item)['values']
+        clear(id_enter, username_enter, password_enter)
+        id_enter.insert(0,row[0])
+        username_enter.insert(0,row[1])
+        password_enter.insert(0,row[2])
+    else:
+        pass
+
+
+    
+def add_users_to_tree(tree):
     database = Database('user.db')
     users = database.fetch_users()
     tree.delete(*tree.get_children())
@@ -21,8 +40,44 @@ def insert_user_treeview(id_enter,username_enter, password_enter,tree):
         messagebox.showerror('Error', 'Please enter all the fields')
     else:
         database.insert_user(id, username, password)
-        add_to_user_treeview(tree)
+        add_users_to_tree(tree)
         messagebox.showinfo('Success', "Your data has been inserted")
+
+def delete_user (id_enter,username_enter, password_enter,tree):
+    selected_item = tree.focus()
+    if not selected_item:
+        messagebox.showerror('Error', 'Chose a user to delete.')
+    else:
+        id = id_enter.get()
+        print("id to be deleted:" + id)
+        Database.delete_user(id)
+        add_users_to_tree(tree)
+        clear(id_enter,username_enter, password_enter)
+        messagebox.showinfo('Success', 'Data has been deleted')
+
+def edit_user(tree, id_enter, username_enter, password_enter):
+    selected_item = tree.focus()
+    if not selected_item:
+        messagebox.showerror('Error', "Choose a user to edit")
+    else:
+        id = id_enter.get()
+        username = username_enter.get()
+        password = password_enter.get()
+        
+        # Correct order of arguments: username, password, id
+        Database.update_user(username, password, id)
+
+        # Refresh the treeview
+        add_users_to_tree(tree)
+        
+        # Clear the entry fields
+        clear(id_enter, username_enter, password_enter)
+        
+        messagebox.showinfo('Success', 'Data has been edited')
+
+      
+
+
 
 # -------------------------------------------
 # User Management Frame Setup
@@ -54,7 +109,8 @@ def setUp_user_management(user_management_frame,admin_dashboard_frame):
     # Placing the Treeview widget
     tree.place(x=450, y=50)
 
-    add_to_user_treeview(tree)
+
+    add_users_to_tree(tree)
 # Title label for User Management Frame
     user_management_label = tk.Label(user_management_frame, text="User Management", font=("Arial", 20), bg="lightgrey")
     user_management_label.pack(pady=10)
@@ -82,16 +138,19 @@ def setUp_user_management(user_management_frame,admin_dashboard_frame):
     add_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="Add User", command=lambda:insert_user_treeview(id_enter,username_enter, password_enter,tree))
     add_user_button.place(x=20, y=300)
 
-    edit_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="Edit User")
+    edit_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="Edit User", command=lambda:edit_user(tree, id_enter, username_enter, password_enter))
     edit_user_button.place(x=20, y=400)
 
     view_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="View User")
     view_user_button.place(x=20, y=500)
 
-    delete_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="Delete User")
+    delete_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="Delete User", command=lambda:delete_user(id_enter,username_enter, password_enter,tree))
     delete_user_button.place(x=20, y=600)
 
    
     # Back button to return to Admin Dashboard
     back_button = tk.Button(user_management_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(admin_dashboard_frame))
     back_button.place(relx=0.5, rely=0.9, anchor='center')
+
+    # Bind the <<TreeviewSelect>> event to the display_user_data function
+    tree.bind('<<TreeviewSelect>>' ,  lambda event: display_user_data(event,tree,id_enter, username_enter, password_enter))
