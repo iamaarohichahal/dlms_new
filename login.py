@@ -9,7 +9,7 @@ from ui.admin_dashboard_ui import setUp_admin_dash
 from ui.user_dashboard_ui import setUp_user_dash
 from ui.user_management_ui import setUp_user_management
 from ui.book_management_ui import setUp_book_management
-
+from PIL import Image, ImageTk
 
 
 # Create an instance of the Database class and initialize it
@@ -56,7 +56,7 @@ def add_book_ui():
 # Initialize the Tkinter application
 app = tk.Tk()
 app.title("Library Management System")
-app.geometry("600x400")
+app.geometry("800x600")
 
 
 # -------------------------------------------
@@ -64,7 +64,10 @@ app.geometry("600x400")
 # -------------------------------------------
 
 # Define all frames with white background
+
+# Create the frame
 login_frame = tk.Frame(app, bg='white')
+
 register_frame = tk.Frame(app, bg='white')
 user_dashboard_frame = tk.Frame(app, bg='white')
 admin_dashboard_frame = tk.Frame(app, bg='white')
