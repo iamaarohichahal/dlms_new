@@ -9,11 +9,11 @@ from ui.admin_dashboard_ui import setUp_admin_dash
 from ui.user_dashboard_ui import setUp_user_dash
 from ui.user_management_ui import setUp_user_management
 from ui.book_management_ui import setUp_book_management
-from PIL import Image, ImageTk
+
 
 
 # Create an instance of the Database class and initialize it
-database = Database('user.db')
+database = Database()
 database.init_db()
 database.close()
 
@@ -104,6 +104,8 @@ setUp_user_dash(user_dashboard_frame, search_book_frame,deposit_book_frame,profi
 setUp_user_management(user_management_frame,admin_dashboard_frame)
 
 setUp_book_management(book_management_frame,admin_dashboard_frame)
+
+
 
 
 # -------------------------------------------

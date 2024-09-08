@@ -4,7 +4,7 @@ from ui.common import show_frame
 from db_utils import Database
 
 def insert_books_treeview(isbn_enter, book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter, tree):
-    database = Database('user.db')  # Assuming the books are in 'user.db'
+    database = Database()  # Assuming the books are in 'user.db'
     
     # Retrieve values from the entry fields and combo box
     isbn = isbn_enter.get()
@@ -35,7 +35,7 @@ def add_books_to_tree(tree):
     for row in tree.get_children():
         tree.delete(row)
     
-    database = Database('user.db')
+    database = Database()
     books = database.fetch_books()
     
     # Insert books into the treeview

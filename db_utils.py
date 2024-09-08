@@ -1,9 +1,9 @@
 # db_utils.py
 import sqlite3
-
+DB_NAME = "dlms.db"
 class Database:
-    def __init__(self, db_name):
-        self.conn = sqlite3.connect(db_name)
+    def __init__(self):
+        self.conn = sqlite3.connect(DB_NAME)
         self.cursor = self.conn.cursor()
 
     def init_db(self):
@@ -17,6 +17,7 @@ class Database:
                        password TEXT NOT NULL)
                        ''')
         
+      
         self.cursor.execute('''
                        CREATE TABLE IF NOT EXISTS books(
                        id INTEGER PRIMARY KEY,
@@ -27,7 +28,11 @@ class Database:
                        summary TEXT NOT NULL, 
                        status TEXT NOT NULL)
                        ''')
-
+        
+        self.cursor.execute('''
+                       drop TABLE IF EXISTS admin
+                       ''')
+        
         self.cursor.execute('''
                        CREATE TABLE IF NOT EXISTS admin(
                        id INTEGER PRIMARY KEY,
@@ -68,14 +73,14 @@ class Database:
         self.conn.commit()
 
     def delete_user(id):
-        conn =sqlite3.connect("user.db")
+        conn =sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
         cursor.execute('DELETE FROM users WHERE id = ?', (id,))
         conn.commit()
         conn.close()
 
     def update_user(new_username, new_password, id):
-        conn = sqlite3.connect('user.db')
+        conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
 
         cursor.execute("UPDATE users SET username = ?, password = ? WHERE id = ?", 
@@ -84,10 +89,12 @@ class Database:
         conn.commit()
         conn.close()
 
+  
+
     def close(self):
             """
             Closes the database connection.
             """
             self.conn.close()
 
-
+ 

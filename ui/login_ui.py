@@ -3,6 +3,7 @@ import sqlite3
 from werkzeug.security import check_password_hash
 from tkinter import messagebox, simpledialog, PhotoImage
 from ui.common import show_frame
+from db_utils import DB_NAME
 
 
 
@@ -13,7 +14,7 @@ def login_user(username, password, user_dashboard_frame):
     Logs in a user by verifying the username and password against the user.db database.
     Navigates to the user dashboard upon successful login.
     """
-    conn = sqlite3.connect('user.db')
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
     user = cursor.fetchone()
@@ -30,7 +31,7 @@ def login_admin(username, password, admin_dashboard_frame):
     Logs in an admin by verifying the username and password against the admin.db database.
     Navigates to the admin dashboard upon successful login.
     """
-    conn = sqlite3.connect('admin.db')
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM admin WHERE username = ?', (username,))
     admin = cursor.fetchone()

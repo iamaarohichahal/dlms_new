@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from tkinter import messagebox, simpledialog
 from ui.common import show_frame
 from user_managment import register_user
-
+from db_utils import DB_NAME
 
 
 
@@ -28,7 +28,7 @@ def register_admin(username, password, login_frame):
     Registers a new admin by inserting username and hashed password into admin.db.
     Displays appropriate message boxes based on registration outcome.
     """
-    conn = sqlite3.connect('admin.db')
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     hashed_password = generate_password_hash(password, method='sha256')
     try:

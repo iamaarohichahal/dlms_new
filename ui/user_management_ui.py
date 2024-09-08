@@ -24,7 +24,7 @@ def display_user_data(event,tree,id_enter, username_enter, password_enter):
 
     
 def add_users_to_tree(tree):
-    database = Database('user.db')
+    database = Database()
     users = database.fetch_users()
     tree.delete(*tree.get_children())
     for user in users:
@@ -32,7 +32,7 @@ def add_users_to_tree(tree):
 
 
 def insert_user_treeview(id_enter,username_enter, password_enter,tree):
-    database = Database('user.db')
+    database = Database()
     id = id_enter.get()
     username = username_enter.get()
     password = password_enter.get()
