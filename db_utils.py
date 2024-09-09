@@ -20,19 +20,17 @@ class Database:
       
         self.cursor.execute('''
                        CREATE TABLE IF NOT EXISTS books(
-                       id INTEGER PRIMARY KEY,
-                       isbn TEXT UNIQUE NOT NULL,
-                       title TEXT NOT NULL,
-                       author TEXT NOT NULL,
-                       genre TEXT NOT NULL, 
-                       summary TEXT NOT NULL, 
-                       status TEXT NOT NULL)
+                        id INTEGER PRIMARY KEY,
+                        isbn TEXT NOT NULL,  
+                        title TEXT NOT NULL,
+                        author TEXT NOT NULL,
+                        genre TEXT NOT NULL,
+                        summary TEXT NOT NULL,
+                        status TEXT NOT NULL)
                        ''')
-        
-        self.cursor.execute('''
-                       drop TABLE IF EXISTS admin
-                       ''')
-        
+
+                                    
+                                    
         self.cursor.execute('''
                        CREATE TABLE IF NOT EXISTS admin(
                        id INTEGER PRIMARY KEY,
@@ -57,20 +55,6 @@ class Database:
                             (id, username, password))
         self.conn.commit()
 
-    def fetch_books(self):
-        """
-        Fetches all books from the 'books' table.
-        """
-        self.cursor.execute("SELECT * FROM books")
-        return self.cursor.fetchall()
-
-    def insert_book(self, isbn, title, author,genre, summary, status):
-        """
-        Inserts a new book into the 'books' table.
-        """
-        self.cursor.execute('INSERT INTO books (isbn,title,author, genre, summary status) VALUES (?, ?, ?, ?, ?, ?)',
-                            (isbn,title,author,genre, summary, status))
-        self.conn.commit()
 
     def delete_user(id):
         conn =sqlite3.connect(DB_NAME)
@@ -89,7 +73,38 @@ class Database:
         conn.commit()
         conn.close()
 
-  
+    def fetch_books(self):
+        """
+        Fetches all books from the 'books' table.
+        """
+        self.cursor.execute("SELECT * FROM books")
+        return self.cursor.fetchall()
+ 
+
+    def insert_book(self,id, isbn, book_title, book_author, book_genre, book_summary, book_status):
+            """
+            Inserts a new  book into the 'books' table.
+            """
+            self.cursor.execute('INSERT INTO books (id, isbn, title, author, genre, summary, status) VALUES (?, ?, ?, ? , ? , ? , ?)',
+                                (id, isbn, book_title, book_author, book_genre, book_summary, book_status))
+            self.conn.commit()
+
+    def delete_book(id):
+        conn =sqlite3.connect(DB_NAME)
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM books WHERE id = ?', (id,))
+        conn.commit()
+        conn.close()
+
+    def update_book(new_isbn, new_title, new_author, new_genre, new_summary, new_status, id):
+            conn = sqlite3.connect(DB_NAME)
+            cursor = conn.cursor()
+
+            cursor.execute("UPDATE books SET isbn = ?, title = ? , author = ?, genre = ?, summary= ?, status= ? WHERE id = ?", 
+                        (new_isbn, new_title, new_author, new_genre, new_summary, new_status, id))
+            
+            conn.commit()
+            conn.close()
 
     def close(self):
             """
