@@ -14,18 +14,21 @@ def login_user(username, password, user_dashboard_frame):
     Logs in a user by verifying the username and password against the user.db database.
     Navigates to the user dashboard upon successful login.
     """
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect('dlms.db')
     cursor = conn.cursor()
+    
+    # Fetch the user record from the database
     cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
     user = cursor.fetchone()
     conn.close()
 
-    # Verify password and show user dashboard if valid
-    if user and check_password_hash(user[2], password):
+    # Verify password (comparing directly, assuming stored as plain text)
+    if user and user[2] == password:  # user[2] should be the stored password
         show_frame(user_dashboard_frame)
     else:
         messagebox.showerror('Error', 'Invalid username or password')
 
+        
 def login_admin(username, password, admin_dashboard_frame):
     """
     Logs in an admin by verifying the username and password against the admin.db database.
@@ -33,22 +36,17 @@ def login_admin(username, password, admin_dashboard_frame):
     """
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
+    
+    # Fetch the admin record from the database
     cursor.execute('SELECT * FROM admin WHERE username = ?', (username,))
     admin = cursor.fetchone()
     conn.close()
 
-    # Debugging prints for development purposes
-    print(f"Admin record: {admin}")
-    print(f"Entered password: {password}")
-    print(f"Stored hash: {admin[2] if admin else 'None'}")
-    print(f"Password match: {check_password_hash(admin[2], password) if admin else 'None'}")
-
-    # Verify password and show admin dashboard if valid
-    if admin and check_password_hash(admin[2], password):
+    # Verify password (comparing directly, assuming stored as plain text)
+    if admin and admin[2] == password:  # admin[2] should be the stored password
         show_frame(admin_dashboard_frame)
     else:
         messagebox.showerror('Error', 'Invalid username or password')
-
 # -------------------------------------------
 # Login Frame Setup
 # -------------------------------------------

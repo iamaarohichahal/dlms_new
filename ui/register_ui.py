@@ -25,15 +25,15 @@ def local_register_user(username, password,login_frame):
 
 def register_admin(username, password, login_frame):
     """
-    Registers a new admin by inserting username and hashed password into admin.db.
+    Registers a new admin by inserting the username and password (plain text) into admin.db.
     Displays appropriate message boxes based on registration outcome.
     """
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
-    hashed_password = generate_password_hash(password, method='sha256')
+    
     try:
         # Attempt to insert new admin credentials into the admin table
-        cursor.execute('INSERT INTO admin (username, password) VALUES (?, ?)', (username, hashed_password))
+        cursor.execute('INSERT INTO admin (username, password) VALUES (?, ?)', (username, password))
         conn.commit()
         # On success, show success message and navigate to login frame
         messagebox.showinfo('Registration', 'Registration successful! Please log in.')
@@ -42,7 +42,6 @@ def register_admin(username, password, login_frame):
         # If insertion fails (e.g., username already exists), show error message
         messagebox.showerror('Error', 'Username already exists')
     conn.close()
-
 
 # -------------------------------------------
 # Registration Frame Setup

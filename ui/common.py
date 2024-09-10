@@ -1,5 +1,6 @@
 import tkinter as tk
 
+
 def show_frame(frame):
 
     """
@@ -27,3 +28,4 @@ def display_books(books,browse_books_frame,user_dashboard_frame):
     back_button.place(relx=0.5, rely=0.9, anchor='center')
 
     show_frame(browse_books_frame)  # Show browse books frame
+
