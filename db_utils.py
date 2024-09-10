@@ -106,6 +106,13 @@ class Database:
             conn.commit()
             conn.close()
 
+    def fetch_book_list(self):
+        """
+        Fetches book title, author, and status from the 'books' table.
+        """
+        self.cursor.execute("SELECT id, title, author, status FROM books")
+        return self.cursor.fetchall()
+
     def close(self):
             """
             Closes the database connection.

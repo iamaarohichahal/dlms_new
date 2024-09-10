@@ -111,9 +111,11 @@ def setUp_user_management(user_management_frame,admin_dashboard_frame):
 
 
     add_users_to_tree(tree)
-# Title label for User Management Frame
+    # Title label for User Management Frame
     user_management_label = tk.Label(user_management_frame, text="User Management", font=("Arial", 20), bg="lightgrey")
     user_management_label.pack(pady=10)
+
+    
 
     # Labels and Entry fields for User Details
     id_label = tk.Label(user_management_frame, font=("Arial", 14), text="User ID", bg="#69359c", fg="white")

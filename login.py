@@ -9,6 +9,7 @@ from ui.admin_dashboard_ui import setUp_admin_dash
 from ui.user_dashboard_ui import setUp_user_dash
 from ui.user_management_ui import setUp_user_management
 from ui.book_management_ui import setUp_book_management
+from ui.browse_books_ui import setUp_browse_books
 
 
 
@@ -22,25 +23,6 @@ database.close()
 # Function Definitions
 # -------------------------------------------
 
-
-
-
-
-def add_book_ui():
-    """
-    Sets up the UI elements for adding a new book.
-    Clears any existing widgets in the add_book_frame before setting up new ones.
-    """
-    # Clear existing widgets in the frame
-    for widget in add_book_frame.winfo_children():
-        widget.destroy()
-    
-    
-    # Button to go back to the user dashboard
-    back_button = tk.Button(add_book_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(user_dashboard_frame))
-    back_button.place(relx=0.5, rely=1.0, anchor='center')
-
-    show_frame(add_book_frame)  # Show add book frame
 
 
 
@@ -75,7 +57,6 @@ add_book_frame = tk.Frame(app, bg='white')
 browse_books_frame = tk.Frame(app, bg='white')
 profile_frame = tk.Frame(app, bg='white')
 deposit_book_frame = tk.Frame(app, bg='white')
-search_book_frame = tk.Frame(app, bg='white')
 account_details_frame = tk.Frame(app, bg='white')
 wishlist_frame = tk.Frame(app, bg='white')
 loan_details_frame = tk.Frame(app, bg='white')
@@ -87,7 +68,7 @@ reports_frame = tk.Frame(app, bg="white")
 settings_frame = tk.Frame(app, bg="white")
 
 # Place all frames to occupy the full window
-for frame in (login_frame, register_frame, user_dashboard_frame, add_book_frame, browse_books_frame, profile_frame, deposit_book_frame, search_book_frame, 
+for frame in (login_frame, register_frame, user_dashboard_frame, add_book_frame, browse_books_frame, profile_frame, deposit_book_frame, 
               account_details_frame, loan_details_frame, borrowing_history_frame, wishlist_frame, admin_dashboard_frame, user_management_frame, 
               book_management_frame, loan_management_frame, reports_frame, settings_frame):
     frame.place(relwidth=1, relheight=1)
@@ -99,11 +80,13 @@ setUp_Register(login_frame, register_frame, user_dashboard_frame, admin_dashboar
 
 setUp_admin_dash(admin_dashboard_frame, user_management_frame,book_management_frame,loan_management_frame,login_frame)
 
-setUp_user_dash(user_dashboard_frame, search_book_frame,deposit_book_frame,profile_frame,login_frame)
+setUp_user_dash(user_dashboard_frame, browse_books_frame,deposit_book_frame,profile_frame,login_frame)
 
 setUp_user_management(user_management_frame,admin_dashboard_frame)
 
 setUp_book_management(book_management_frame,admin_dashboard_frame)
+
+setUp_browse_books(browse_books_frame)
 
 
 
@@ -161,8 +144,7 @@ def setup_frame(frame, title_text, back_command):
 # Setting up Deposit Book Frame
 setup_frame(deposit_book_frame, "Deposit Book", lambda: show_frame(user_dashboard_frame))
 
-# Setting up Search Book Frame
-setup_frame(search_book_frame, "Search for Book", lambda: show_frame(user_dashboard_frame))
+
 
 # Setting up Browse Books Frame
 setup_frame(browse_books_frame, "Browse Books", lambda: show_frame(user_dashboard_frame))

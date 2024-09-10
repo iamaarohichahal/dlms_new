@@ -7,8 +7,6 @@ from db_utils import DB_NAME
 
 
 
-
-
 def login_user(username, password, user_dashboard_frame):
     """
     Logs in a user by verifying the username and password against the user.db database.

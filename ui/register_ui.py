@@ -1,6 +1,5 @@
 import tkinter as tk
 import sqlite3
-from werkzeug.security import check_password_hash, generate_password_hash
 from tkinter import messagebox, simpledialog
 from ui.common import show_frame
 from user_managment import register_user
