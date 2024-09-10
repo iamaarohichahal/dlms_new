@@ -1,7 +1,6 @@
 import tkinter as tk
 import sqlite3
 from tkinter import ttk, END
-from ui.common import show_frame
 from db_utils import Database,DB_NAME
 
 
@@ -20,8 +19,9 @@ def clear (title_enter, author_enter, isbn_enter, summary_text):
     # Clear the Text widget (summary_text)
     summary_text.delete(1.0, tk.END)
 
-def display_book_details(event, book_list_tree, title_enter, author_enter, isbn_enter, summary_text):
-    # Get the selected item from the Treeview
+def display_book_details(event, book_list_tree, title_enter, author_enter, isbn_enter, summary_text,shared_data):
+    print("logged user:" + shared_data.get_user_id())
+       # Get the selected item from the Treeview
     selected_item = book_list_tree.focus()
     
     if selected_item:
@@ -46,7 +46,9 @@ def display_book_details(event, book_list_tree, title_enter, author_enter, isbn_
     else:
         pass  
 
-def setUp_browse_books(browse_books_frame):
+   
+
+def setUp_browse_books(browse_books_frame,shared_data):
 
     # Create the frame
     book_details = tk.Frame(browse_books_frame, bd=2, relief="ridge", bg="white", height=700)
@@ -82,14 +84,24 @@ def setUp_browse_books(browse_books_frame):
 
     # Summary
     summary_label = tk.Label(book_details, font=("Arial", 14), text="summary", bg="#69359c", fg="white")
-    summary_label.place(x=20, y=260)
+    summary_label.place(x=20, y=240)
 
     summary_text = tk.Text(book_details, font=("Arial", 14), bd=2, bg="white", fg="black", wrap=tk.WORD)
-    summary_text.place(x=110, y=260, width=250, height=350) 
+    summary_text.place(x=110, y=240, width=250, height=350) 
+
+     # username
+    username_label = tk.Label(book_details, font=("Arial", 14), text="username", bg="#69359c", fg="white")
+    username_label.place(x=20, y=610)
+
+    username_enter = tk.Entry(book_details, font=("Arial", 14), bd=2, width=15, bg="white", fg="black")
+    username_enter.place(x=115, y=610)
+ 
+   # username_enter.insert(0, shared_data.get_user_id())
+
 
     # "Borrow" Button
     borrow_button = tk.Button(book_details, text="Borrow", font=("Arial", 14), bg="#1A8F2D", fg="white", bd=2)
-    borrow_button.place(x=150, y=650, width=100, height=30) 
+    borrow_button.place(x=150, y=650, width=100, height=30)
 
     # Styling for the Treeview widget for list of books
     style = ttk.Style(browse_books_frame)
@@ -115,7 +127,7 @@ def setUp_browse_books(browse_books_frame):
 
     add_book_list_to_tree(book_list_tree)
 
-    book_list_tree.bind('<<TreeviewSelect>>' ,  lambda event: display_book_details(event,book_list_tree,title_enter,author_enter ,isbn_enter,summary_text))
+    book_list_tree.bind('<<TreeviewSelect>>' ,  lambda event: display_book_details(event,book_list_tree,title_enter,author_enter ,isbn_enter,summary_text,shared_data))
     # Placing the Treeview widget
     book_list_tree.place(x=20, y=100)
 

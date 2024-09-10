@@ -10,6 +10,8 @@ from ui.user_dashboard_ui import setUp_user_dash
 from ui.user_management_ui import setUp_user_management
 from ui.book_management_ui import setUp_book_management
 from ui.browse_books_ui import setUp_browse_books
+from shared import Shared
+
 
 
 
@@ -67,14 +69,16 @@ loan_management_frame = tk.Frame(app, bg="white")
 reports_frame = tk.Frame(app, bg="white")
 settings_frame = tk.Frame(app, bg="white")
 
+
+
 # Place all frames to occupy the full window
 for frame in (login_frame, register_frame, user_dashboard_frame, add_book_frame, browse_books_frame, profile_frame, deposit_book_frame, 
               account_details_frame, loan_details_frame, borrowing_history_frame, wishlist_frame, admin_dashboard_frame, user_management_frame, 
               book_management_frame, loan_management_frame, reports_frame, settings_frame):
     frame.place(relwidth=1, relheight=1)
 
-
-setUp_Login(login_frame, register_frame, user_dashboard_frame, admin_dashboard_frame)
+shared_data = Shared()
+setUp_Login(login_frame, register_frame, user_dashboard_frame, admin_dashboard_frame, shared_data)
 
 setUp_Register(login_frame, register_frame, user_dashboard_frame, admin_dashboard_frame)
 
@@ -86,7 +90,9 @@ setUp_user_management(user_management_frame,admin_dashboard_frame)
 
 setUp_book_management(book_management_frame,admin_dashboard_frame)
 
-setUp_browse_books(browse_books_frame)
+setUp_browse_books(browse_books_frame, shared_data)
+
+
 
 
 

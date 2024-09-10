@@ -6,8 +6,7 @@ from ui.common import show_frame
 from db_utils import DB_NAME
 
 
-
-def login_user(username, password, user_dashboard_frame):
+def login_user(username, password, user_dashboard_frame,shared_data):
     """
     Logs in a user by verifying the username and password against the user.db database.
     Navigates to the user dashboard upon successful login.
@@ -22,6 +21,7 @@ def login_user(username, password, user_dashboard_frame):
 
     # Verify password (comparing directly, assuming stored as plain text)
     if user and user[2] == password:  # user[2] should be the stored password
+        shared_data.set_user_id(username)
         show_frame(user_dashboard_frame)
     else:
         messagebox.showerror('Error', 'Invalid username or password')
@@ -48,7 +48,7 @@ def login_admin(username, password, admin_dashboard_frame):
 # -------------------------------------------
 # Login Frame Setup
 # -------------------------------------------
-def setUp_Login(login_frame, register_frame, user_dashboard_frame, admin_dashboard_frame):
+def setUp_Login(login_frame, register_frame, user_dashboard_frame, admin_dashboard_frame, shared_data):
 
     
     # Title label for Login Frame
@@ -60,7 +60,8 @@ def setUp_Login(login_frame, register_frame, user_dashboard_frame, admin_dashboa
                                 command=lambda: login_user(
                                     simpledialog.askstring("User Login", "Enter username:"),
                                     simpledialog.askstring("User Login", "Enter password:", show='*'),
-                                    user_dashboard_frame
+                                    user_dashboard_frame,
+                                    shared_data
                                 ))
     user_login_button.place(relx=0.5, rely=0.4, anchor='center')
 
