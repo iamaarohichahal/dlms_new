@@ -11,6 +11,8 @@ from ui.user_management_ui import setUp_user_management
 from ui.book_management_ui import setUp_book_management
 from ui.browse_books_ui import setUp_browse_books
 from ui.borrow_ui import setUp_borrow_books_frame
+from ui.loan_details_ui import setUp_loan_details
+from ui.loan_return_ui import setUp_loan_return_frame
 from shared import Shared
 
 
@@ -57,13 +59,14 @@ loan_management_frame = tk.Frame(app, bg="white")
 reports_frame = tk.Frame(app, bg="white")
 settings_frame = tk.Frame(app, bg="white")
 borrow_frame = tk.Frame(app, bg="white")
+loan_return_frame= tk.Frame(app,bg="white")
 
 
 
 # Place all frames to occupy the full window
 for frame in (login_frame, register_frame, user_dashboard_frame, add_book_frame, browse_books_frame, profile_frame, deposit_book_frame, 
               account_details_frame, loan_details_frame, borrowing_history_frame, wishlist_frame, admin_dashboard_frame, user_management_frame, 
-              book_management_frame, loan_management_frame, reports_frame, settings_frame, borrow_frame):
+              book_management_frame, loan_management_frame, reports_frame, settings_frame, borrow_frame,loan_return_frame):
     frame.place(relwidth=1, relheight=1)
 
 shared_data = Shared()
@@ -83,21 +86,13 @@ setUp_browse_books(browse_books_frame, shared_data, borrow_frame)
 
 setUp_borrow_books_frame(borrow_frame, shared_data,browse_books_frame)
 
+setUp_loan_details(loan_details_frame,user_dashboard_frame,shared_data,loan_return_frame)
+
+setUp_loan_return_frame(loan_return_frame, show_frame, loan_details_frame, shared_data)
 
 
 
 
-# -------------------------------------------
-# Loan Management Frame Setup
-# -------------------------------------------
-
-# Title label for Loan Management Frame
-loan_management_label = tk.Label(loan_management_frame, text="Loan Management", font=("Arial", 20), bg="lightgreen")
-loan_management_label.pack(pady=10)
-
-# Back button to return to Admin Dashboard
-back_button = tk.Button(loan_management_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(admin_dashboard_frame))
-back_button.place(relx=0.5, rely=0.9, anchor='center')
 
 
 
@@ -148,8 +143,7 @@ setup_frame(browse_books_frame, "Browse Books", lambda: show_frame(user_dashboar
 # Setting up Account Details Frame
 setup_frame(account_details_frame, "Account Details", lambda: show_frame(profile_frame))
 
-# Setting up Loan Details Frame
-setup_frame(loan_details_frame, "Loan Details", lambda: show_frame(profile_frame))
+
 
 # Setting up Borrowing History Frame
 setup_frame(borrowing_history_frame, "Borrowing History", lambda: show_frame(profile_frame))

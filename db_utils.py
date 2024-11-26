@@ -150,6 +150,19 @@ class Database:
 
         self.conn.commit()
 
+    def fetch_borrowed_books_by_user(self, user_id):
+        self.cursor.execute('''
+            SELECT b.id, b.isbn, b.title, b.author, b.genre, b.summary, bb.return_date, bb.status
+            FROM borrowed_books bb
+            INNER JOIN books b ON bb.book_id = b.id
+            WHERE bb.user_id = ?
+        ''', (user_id,))
+        return self.cursor.fetchall()
+    
+
+
+    
+
 
 
     def close(self):

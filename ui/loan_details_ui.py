@@ -1,0 +1,128 @@
+import tkinter as tk
+from tkinter import ttk, messagebox, END
+import sqlite3
+from ui.common import show_frame
+from db_utils import Database
+
+def view_loans(shared_data, loan_details_tree):
+    """
+    Fetches and populates the Treeview with book details (ID, ISBN, Title, Author, Genre, Summary, Return Date)
+    for the borrowed books corresponding to the logged-in user.
+    """
+    # Retrieve the user_id from shared data (this will be the ID of the logged-in user)
+    user_id = shared_data.get_user_id()  # Assuming shared_data has a get_user_id() method
+
+    if user_id:  # Ensure user_id is valid (logged in)
+        conn = sqlite3.connect('dlms.db')
+        cursor = conn.cursor()
+
+        try:
+            # Fetch borrowed books and corresponding book details for the logged-in user
+            cursor.execute(''' 
+                SELECT b.book_id, bo.isbn, bo.title, bo.author, bo.genre, bo.summary, b.return_date
+                FROM borrowed_books b
+                JOIN books bo ON b.book_id = bo.id
+                WHERE b.user_id = ?''', (user_id,))
+            borrowed_books = cursor.fetchall()
+
+            if borrowed_books:
+                # Clear the Treeview before adding new rows
+                loan_details_tree.delete(*loan_details_tree.get_children())
+                
+                # Loop through the fetched data and insert into Treeview
+                for book in borrowed_books:
+                    book_id, isbn, title, author, genre, summary, return_date = book
+                    loan_details_tree.insert('', 'end', values=(book_id, isbn, title, author, genre, summary, return_date))
+            else:
+                print("No borrowed books found.")
+        
+        except sqlite3.Error as e:
+            print(f"Error fetching borrowed books: {e}")
+
+        finally:
+            conn.close()
+    else:
+        print("User is not logged in.")
+
+def handle_return_book(loan_details_tree, loan_return_frame, loan_details_frame, shared_data):
+    """
+    Handles the 'Return Book' button action. Opens a new frame for returning a book
+    if a row is selected in the Treeview.
+    """
+    # Get the selected item from the Treeview
+    selected_item = loan_details_tree.selection()
+    
+    if selected_item:
+        # Fetch data from the selected row
+        selected_book = loan_details_tree.item(selected_item[0], 'values')
+        shared_data.selected_book = {
+            'book_id': selected_book[0],
+            'isbn': selected_book[1],
+            'title': selected_book[2],
+            'author': selected_book[3],
+            'genre': selected_book[4],
+            'summary': selected_book[5],
+            'return_date': selected_book[6],
+        }
+        
+        # Show the Loan Return Frame
+        show_frame(loan_return_frame)
+    else:
+        # Display error message if no row is selected
+        messagebox.showerror("Error", "Please select a book to return.")
+
+
+
+
+# -------------------------------------------
+# Loan Details Frame Setup
+# -------------------------------------------
+def setUp_loan_details(loan_details_frame, user_dashboard_frame, shared_data, loan_return_frame):
+    # Title label for Loan Details Frame
+    loan_details_label = tk.Label(loan_details_frame, text="Loan Details", font=("Arial", 20), bg="lightblue")
+    loan_details_label.pack(pady=10)
+
+    # Styling for the Treeview widget
+    style = ttk.Style(loan_details_frame)
+    style.theme_use('clam')
+    style.configure('Treeview', font=("Arial", 14))
+    style.map('Treeview', background=[('selected', '#1A8F2D')])
+
+    # Creating the Treeview widget to display book data
+    loan_details_tree = ttk.Treeview(loan_details_frame, height=30)
+
+    # Defining columns for the Treeview
+    loan_details_tree['columns'] = ('ID', 'ISBN', 'Book Title', 'Book Author', 'Book Genre', 'Book Summary', 'Return Date')
+
+    # Configuring columns
+    loan_details_tree.column('#0', width=0, stretch=tk.NO)
+    loan_details_tree.column('ID', anchor=tk.CENTER, width=50)
+    loan_details_tree.column('ISBN', anchor=tk.CENTER, width=100)
+    loan_details_tree.column('Book Title', anchor=tk.CENTER, width=200)
+    loan_details_tree.column('Book Author', anchor=tk.CENTER, width=200)
+    loan_details_tree.column('Book Genre', anchor=tk.CENTER, width=100)
+    loan_details_tree.column('Book Summary', anchor=tk.CENTER, width=200)
+    loan_details_tree.column('Return Date', anchor=tk.CENTER, width=100)
+
+    # Defining headings
+    loan_details_tree.heading('ID', text='ID')
+    loan_details_tree.heading('ISBN', text='ISBN')
+    loan_details_tree.heading('Book Title', text='Book Title')
+    loan_details_tree.heading('Book Author', text='Book Author')
+    loan_details_tree.heading('Book Genre', text='Book Genre')
+    loan_details_tree.heading('Book Summary', text='Book Summary')
+    loan_details_tree.heading('Return Date', text='Return Date')
+
+    # Placing the Treeview widget
+    loan_details_tree.place(x=400, y=150)
+
+    # Buttons for Return Book, Back, and View Loans
+    return_button = tk.Button(loan_details_frame, text="Return Book", font=("Arial", 14), command=lambda: handle_return_book(loan_details_tree, loan_return_frame, loan_details_frame, shared_data))
+    return_button.place(relx=0.4, rely=0.9, anchor='center')
+
+    back_button = tk.Button(loan_details_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(user_dashboard_frame))
+    back_button.place(relx=0.6, rely=0.9, anchor='center')
+
+    view_loans_button = tk.Button(loan_details_frame, text="View Loans", font=("Arial", 14), 
+                                  command=lambda: view_loans(shared_data, loan_details_tree))
+    view_loans_button.place(relx=0.8, rely=0.9, anchor='center')

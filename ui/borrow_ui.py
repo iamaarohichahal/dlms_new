@@ -48,6 +48,8 @@ def verify_user_and_borrow(username_entry, password_entry, shared_data):
     else:
         messagebox.showerror('Error', 'Invalid username or password')
 
+
+
 def setUp_borrow_books_frame(borrow_frame, shared_data, browse_books_frame):
     # Header
     header_label = tk.Label(borrow_frame, text="Borrow Book", font=("Arial", 16, "bold"), bg="white")

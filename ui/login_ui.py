@@ -6,7 +6,7 @@ from ui.common import show_frame
 from db_utils import DB_NAME
 
 
-def login_user(username, password, user_dashboard_frame,shared_data):
+def login_user(username, password, user_dashboard_frame, shared_data):
     """
     Logs in a user by verifying the username and password against the user.db database.
     Navigates to the user dashboard upon successful login.
@@ -20,11 +20,20 @@ def login_user(username, password, user_dashboard_frame,shared_data):
     conn.close()
 
     # Verify password (comparing directly, assuming stored as plain text)
-    if user and user[2] == password:  # user[2] should be the stored password
-        shared_data.set_user_id(username)
+    if user and user[2] == password:  # user[2] is the stored password
+        user_id = user[0]  # user[0] is the user ID from the table
+        print(f"User {username} logged in with User ID: {user_id}")
+        
+        # Set the user_id in shared data (passing user_id, not username)
+        shared_data.set_user_id(user_id)
+        
+        # Navigate to the user dashboard
         show_frame(user_dashboard_frame)
     else:
         messagebox.showerror('Error', 'Invalid username or password')
+
+
+
 
         
 def login_admin(username, password, admin_dashboard_frame):

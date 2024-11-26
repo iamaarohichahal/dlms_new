@@ -7,11 +7,11 @@ class Shared:
         return self._userId
 
     def set_user_id(self, value):
-        print("set user:" + value)
-        if isinstance(value, str) and value:
-            self._userId = value
-        else:
-            raise ValueError("Name must be a non-empty string")
+        # Print the user_id (even if it's an integer)
+        print("set user:", value)
+    
+        # Ensure the value is stored as a string
+        self._userId = str(value)
 
     def set_selected_book(self, book_details):
         if isinstance(book_details, dict) and "title" in book_details and "author" in book_details and "isbn" in book_details:
