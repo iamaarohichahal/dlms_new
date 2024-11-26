@@ -68,7 +68,7 @@ def delete_book (id_enter, isbn_enter,book_title_enter, book_author_enter, book_
         clear(id_enter, isbn_enter,book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter)
         messagebox.showinfo('Success', 'Data has been deleted')
 
-def edit_book(tree, id_enter, isbn_enter,book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter):
+def edit_book(tree, id_enter, isbn_enter, book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter):
     selected_item = tree.focus()
     if not selected_item:
         messagebox.showerror('Error', "Choose a book to edit")
@@ -81,13 +81,14 @@ def edit_book(tree, id_enter, isbn_enter,book_title_enter, book_author_enter, bo
         book_summary = book_summary_enter.get()
         book_status = book_status_enter.get()
         
+        # Correct order of arguments: isbn, book_title, book_author, book_genre, book_summary, book_status, id
         Database.update_book(isbn, book_title, book_author, book_genre, book_summary, book_status, id)
 
         # Refresh the treeview
         add_books_to_tree(tree)
         
         # Clear the entry fields
-        clear(id_enter, isbn_enter,book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter)
+        clear(id_enter, isbn_enter, book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter)
         
         messagebox.showinfo('Success', 'Data has been edited')
 

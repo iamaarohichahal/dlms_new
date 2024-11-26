@@ -1,6 +1,6 @@
 
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, PhotoImage
 from db_utils import Database
 from ui.common import show_frame
 from ui.login_ui import setUp_Login
@@ -10,6 +10,7 @@ from ui.user_dashboard_ui import setUp_user_dash
 from ui.user_management_ui import setUp_user_management
 from ui.book_management_ui import setUp_book_management
 from ui.browse_books_ui import setUp_browse_books
+from ui.borrow_ui import setUp_borrow_books_frame
 from shared import Shared
 
 
@@ -20,19 +21,6 @@ database = Database()
 database.init_db()
 database.close()
 
-
-# -------------------------------------------
-# Function Definitions
-# -------------------------------------------
-
-
-
-
-
-
-
-
-
 # -------------------------------------------
 # Application Initialization
 # -------------------------------------------
@@ -40,7 +28,7 @@ database.close()
 # Initialize the Tkinter application
 app = tk.Tk()
 app.title("Library Management System")
-app.geometry("800x600")
+app.geometry("1400x1000")
 
 
 # -------------------------------------------
@@ -68,13 +56,14 @@ book_management_frame = tk.Frame(app, bg="white")
 loan_management_frame = tk.Frame(app, bg="white")
 reports_frame = tk.Frame(app, bg="white")
 settings_frame = tk.Frame(app, bg="white")
+borrow_frame = tk.Frame(app, bg="white")
 
 
 
 # Place all frames to occupy the full window
 for frame in (login_frame, register_frame, user_dashboard_frame, add_book_frame, browse_books_frame, profile_frame, deposit_book_frame, 
               account_details_frame, loan_details_frame, borrowing_history_frame, wishlist_frame, admin_dashboard_frame, user_management_frame, 
-              book_management_frame, loan_management_frame, reports_frame, settings_frame):
+              book_management_frame, loan_management_frame, reports_frame, settings_frame, borrow_frame):
     frame.place(relwidth=1, relheight=1)
 
 shared_data = Shared()
@@ -90,8 +79,9 @@ setUp_user_management(user_management_frame,admin_dashboard_frame)
 
 setUp_book_management(book_management_frame,admin_dashboard_frame)
 
-setUp_browse_books(browse_books_frame, shared_data)
+setUp_browse_books(browse_books_frame, shared_data, borrow_frame)
 
+setUp_borrow_books_frame(borrow_frame, shared_data,browse_books_frame)
 
 
 
