@@ -70,6 +70,14 @@ def verify_user_and_return(username_entry, password_entry, shared_data):
 
 
 def setUp_loan_return_frame(loan_return_frame, show_frame, loan_details_frame, shared_data):
+
+     # Load the background image
+    bg_image = tk.PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
+
+    # Add the background image to the frame
+    bg_label = tk.Label(loan_return_frame, image=bg_image)
+    bg_label.image = bg_image  
+    bg_label.place(relwidth=1, relheight=1)  # Make it cover the entire frame
     """
     Sets up the Loan Return frame, including Treeview for book details and user confirmation inputs.
     """

@@ -83,6 +83,14 @@ def edit_user(tree, id_enter, username_enter, password_enter):
 # User Management Frame Setup
 # -------------------------------------------
 def setUp_user_management(user_management_frame,admin_dashboard_frame):
+
+     # Load the background image
+    bg_image = tk.PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
+
+    # Add the background image to the frame
+    bg_label = tk.Label(user_management_frame, image=bg_image)
+    bg_label.image = bg_image  
+    bg_label.place(relwidth=1, relheight=1)  # Make it cover the entire frame
     # Styling for the Treeview widget
     style = ttk.Style(user_management_frame)
     style.theme_use('clam')

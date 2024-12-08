@@ -96,6 +96,14 @@ def edit_book(tree, id_enter, isbn_enter, book_title_enter, book_author_enter, b
 # Book Management Frame Setup
 # -------------------------------------------
 def setUp_book_management(book_management_frame,admin_dashboard_frame):
+
+    # Load the background image
+    bg_image = tk.PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
+
+    # Add the background image to the frame
+    bg_label = tk.Label(book_management_frame, image=bg_image)
+    bg_label.image = bg_image  
+    bg_label.place(relwidth=1, relheight=1)  # Make it cover the entire frame
     # Title label for Book Management Frame
     book_management_label = tk.Label(book_management_frame, text="Book Management", font=("Arial", 20), bg="lightblue")
     book_management_label.pack(pady=10)

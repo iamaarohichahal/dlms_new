@@ -1,6 +1,6 @@
 import tkinter as tk
 import sqlite3
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox, simpledialog, PhotoImage
 from ui.common import show_frame
 from user_managment import register_user
 from db_utils import DB_NAME
@@ -47,9 +47,18 @@ def register_admin(username, password, login_frame):
 # -------------------------------------------
 def setUp_Register(login_frame, register_frame, user_dashboard_frame, admin_dashboard_frame):
     
-    # Title label for Registration Frame
+     # Load the background image
+    bg_image = tk.PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
+
+    # Add the background image to the register frame
+    bg_label = tk.Label(register_frame, image=bg_image)
+    bg_label.image = bg_image  # Keep a reference to avoid garbage collection
+    bg_label.place(relwidth=1, relheight=1)  # Make it cover the entire frame
+
+    # Title label for Registration Frame (overlaid on the background)
     title = tk.Label(register_frame, text="Add a New User", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
     title.place(x=0, y=0, relwidth=1, height=70)
+
 
     # Register button for User
     user_register_button = tk.Button(register_frame, text="Register User", font=("Arial", 14), 

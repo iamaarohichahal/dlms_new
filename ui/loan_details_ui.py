@@ -78,6 +78,14 @@ def handle_return_book(loan_details_tree, loan_return_frame, loan_details_frame,
 # Loan Details Frame Setup
 # -------------------------------------------
 def setUp_loan_details(loan_details_frame, user_dashboard_frame, shared_data, loan_return_frame):
+
+     # Load the background image
+    bg_image = tk.PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
+
+    # Add the background image to the frame
+    bg_label = tk.Label(loan_details_frame, image=bg_image)
+    bg_label.image = bg_image  
+    bg_label.place(relwidth=1, relheight=1)  # Make it cover the entire frame
     # Title label for Loan Details Frame
     loan_details_label = tk.Label(loan_details_frame, text="Loan Details", font=("Arial", 20), bg="lightblue")
     loan_details_label.pack(pady=10)

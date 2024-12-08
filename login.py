@@ -32,6 +32,8 @@ app = tk.Tk()
 app.title("Library Management System")
 app.geometry("1400x1000")
 
+# Load the background image
+image_path = PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
 
 # -------------------------------------------
 # Frame Definitions
@@ -39,8 +41,14 @@ app.geometry("1400x1000")
 
 # Define all frames with white background
 
-# Create the frame
+# Create the login frame
 login_frame = tk.Frame(app, bg='white')
+login_frame.place(relheight=1, relwidth=1)
+
+# Add the background image to the login frame
+bg_image = tk.Label(login_frame, image=image_path)
+bg_image.place(relheight=1, relwidth=1)
+
 
 register_frame = tk.Frame(app, bg='white')
 user_dashboard_frame = tk.Frame(app, bg='white')
@@ -82,6 +90,7 @@ setUp_user_management(user_management_frame,admin_dashboard_frame)
 
 setUp_book_management(book_management_frame,admin_dashboard_frame)
 
+
 setUp_browse_books(browse_books_frame, shared_data, borrow_frame)
 
 setUp_borrow_books_frame(borrow_frame, shared_data,browse_books_frame)
@@ -101,6 +110,14 @@ setUp_loan_return_frame(loan_return_frame, show_frame, loan_details_frame, share
 # -------------------------------------------
 
 # Title label for Profile Frame
+
+ # Load the background image
+bg_image = tk.PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
+
+# Add the background image to the frame
+bg_label = tk.Label(profile_frame, image=bg_image)
+bg_label.image = bg_image  
+bg_label.place(relwidth=1, relheight=1)  # Make it cover the entire frame
 title = tk.Label(profile_frame, text="My Profile", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
 title.place(x=0, y=0, relwidth=1, height=70)
 

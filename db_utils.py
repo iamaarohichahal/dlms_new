@@ -32,6 +32,7 @@ class Database:
                         status TEXT NOT NULL)
                        ''')
 
+
         # Admin Table
         self.cursor.execute('''
                        CREATE TABLE IF NOT EXISTS admin(
@@ -68,6 +69,16 @@ class Database:
         """
         self.cursor.execute("SELECT * FROM users")
         return self.cursor.fetchall()
+
+    def get_all_books_as_array(self):
+        """
+        Fetches all books from the database and returns them in a simple list/array.
+        Only includes: title, author, status.
+        """
+        self.cursor.execute("SELECT title, author, status FROM books")
+        books_array = self.cursor.fetchall()
+        return books_array
+    
 
     def insert_user(self, id, username, password):
         """
@@ -160,15 +171,41 @@ class Database:
         return self.cursor.fetchall()
     
 
+    def get_all_books_as_array(self):
+       
+        
+        db = Database()
+
+        # Fetch books from the database
+        books_array = db.get_all_books_as_array()
+
+
+        # Bubble sort to sort by title (case-insensitive)
+        n = len(books_array)
+        for i in range(n):
+            for j in range(0, n - i - 1):
+                if books_array[j][0].lower() > books_array[j + 1][0].lower():
+                    books_array[j], books_array[j + 1] = books_array[j + 1], books_array[j]
+
+        # Print sorted books
+        print("Sorted Books Array:")
+        for book in books_array:
+            print(book)
+
+        return books_array
+
+    # Call the function to test
+    if __name__ == "__main__":
+        get_all_books_as_array()
+
 
     
-
-
 
     def close(self):
             """
             Closes the database connection.
             """
             self.conn.close()
+
 
     

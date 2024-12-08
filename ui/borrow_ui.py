@@ -51,6 +51,14 @@ def verify_user_and_borrow(username_entry, password_entry, shared_data):
 
 
 def setUp_borrow_books_frame(borrow_frame, shared_data, browse_books_frame):
+
+     # Load the background image
+    bg_image = tk.PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
+
+    # Add the background image to the frame
+    bg_label = tk.Label(borrow_frame, image=bg_image)
+    bg_label.image = bg_image  
+    bg_label.place(relwidth=1, relheight=1)  # Make it cover the entire frame
     # Header
     header_label = tk.Label(borrow_frame, text="Borrow Book", font=("Arial", 16, "bold"), bg="white")
     header_label.place(x=0, y=0, relwidth=1, height=40)  # Place header at top

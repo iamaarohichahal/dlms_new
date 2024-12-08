@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import PhotoImage
 from ui.common import show_frame
 
 
@@ -7,6 +8,14 @@ from ui.common import show_frame
 # -------------------------------------------
 
 def setUp_admin_dash(admin_dashboard_frame, user_management_frame,book_management_frame,loan_management_frame,login_frame):
+    # Load the background image
+    bg_image = tk.PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
+
+    # Add the background image to the frame
+    bg_label = tk.Label(admin_dashboard_frame, image=bg_image)
+    bg_label.image = bg_image  # Keep a reference to avoid garbage collection
+    bg_label.place(relwidth=1, relheight=1)  # Make it cover the entire frame
+
 # Title label for Admin Dashboard Frame
     title = tk.Label(admin_dashboard_frame, text="Admin Dashboard", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
     title.place(x=0, y=0, relwidth=1, height=70)
