@@ -41,9 +41,6 @@ def setUp_user_dash(user_dashboard_frame, browse_books_frame,deposit_book_frame,
     btn_browse_books = tk.Button(DashboardMenu, text="Browse Books", font=("times new roman", 12, "bold"), bg="white", width=15, command=lambda: show_frame(browse_books_frame))
     btn_browse_books.pack(side=tk.RIGHT, padx=5, pady=5)
 
-    btn_deposit_book = tk.Button(DashboardMenu, text="Deposit Book", font=("times new roman", 12, "bold"), bg="white", width=15, command=lambda: show_frame(deposit_book_frame))
-    btn_deposit_book.pack(side=tk.RIGHT, padx=5, pady=5)
-
     btn_my_profile = tk.Button(DashboardMenu, text="My Profile", font=("times new roman", 12, "bold"), bg="white", width=15, command=lambda: show_frame(profile_frame))
     btn_my_profile.pack(side=tk.RIGHT, padx=5, pady=5)
 

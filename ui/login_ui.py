@@ -54,6 +54,8 @@ def login_admin(username, password, admin_dashboard_frame):
         show_frame(admin_dashboard_frame)
     else:
         messagebox.showerror('Error', 'Invalid username or password')
+
+        
 # -------------------------------------------
 # Login Frame Setup
 # -------------------------------------------
@@ -61,7 +63,7 @@ def setUp_Login(login_frame, register_frame, user_dashboard_frame, admin_dashboa
 
     
     # Title label for Login Frame
-    title = tk.Label(login_frame, text="Welcome to the Digital Library!", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
+    title = tk.Label(login_frame, text="Library Management System", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
     title.place(x=0, y=0, relwidth=1, height=70)
 
     # Button for User Login

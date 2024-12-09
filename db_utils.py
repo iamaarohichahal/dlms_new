@@ -56,8 +56,6 @@ class Database:
                             FOREIGN KEY (user_id) REFERENCES users(id)
                         )
                     ''')
-                    
-                
 
 
         self.conn.commit()
@@ -148,17 +146,29 @@ class Database:
     
     def borrow_book(self, book_id, user_id):
         """
-        Inserts a record into the borrowed_books table when a user borrows a book.
+        Inserts a record into the borrowed_books table when a user borrows a book
+        and updates the status of the book in the books table to 'borrowed'.
         """
+        from datetime import datetime, timedelta
+        
+        # Get the current date and calculate the return date
         borrow_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        # Set a default return date for now (could be 14 days or any policy)
         return_date = (datetime.now() + timedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')
 
+        # Insert the borrowing record into the borrowed_books table
         self.cursor.execute('''
             INSERT INTO borrowed_books (book_id, user_id, borrow_date, return_date, status)
             VALUES (?, ?, ?, ?, ?)
         ''', (book_id, user_id, borrow_date, return_date, 'borrowed'))
 
+        # Update the status of the book in the books table
+        self.cursor.execute('''
+            UPDATE books
+            SET status = 'borrowed'
+            WHERE id = ?
+        ''', (book_id,))
+
+        # Commit the changes to the database
         self.conn.commit()
 
     def fetch_borrowed_books_by_user(self, user_id):

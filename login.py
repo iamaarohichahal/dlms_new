@@ -13,6 +13,7 @@ from ui.browse_books_ui import setUp_browse_books
 from ui.borrow_ui import setUp_borrow_books_frame
 from ui.loan_details_ui import setUp_loan_details
 from ui.loan_return_ui import setUp_loan_return_frame
+from ui.borrow_history_ui import setUp_borrowing_history
 from shared import Shared
 
 
@@ -99,6 +100,8 @@ setUp_loan_details(loan_details_frame,user_dashboard_frame,shared_data,loan_retu
 
 setUp_loan_return_frame(loan_return_frame, show_frame, loan_details_frame, shared_data)
 
+setUp_borrowing_history(borrowing_history_frame,profile_frame)
+
 
 
 
@@ -122,17 +125,12 @@ title = tk.Label(profile_frame, text="My Profile", font=("times new roman", 40, 
 title.place(x=0, y=0, relwidth=1, height=70)
 
 # Profile management buttons
-account_details_button = tk.Button(profile_frame, text="Account Details", font=("Arial", 14), command=lambda: show_frame(account_details_frame))
-account_details_button.place(relx=0.5, rely=0.3, anchor='center')
-
 loan_details_button = tk.Button(profile_frame, text="Loan Details", font=("Arial", 14), command=lambda: show_frame(loan_details_frame))
 loan_details_button.place(relx=0.5, rely=0.4, anchor='center')
 
 borrowing_history_button = tk.Button(profile_frame, text="Borrowing History", font=("Arial", 14), command=lambda: show_frame(borrowing_history_frame))
 borrowing_history_button.place(relx=0.5, rely=0.5, anchor='center')
 
-wishlist_button = tk.Button(profile_frame, text="Wishlist", font=("Arial", 14), command=lambda: show_frame(wishlist_frame))
-wishlist_button.place(relx=0.5, rely=0.6, anchor='center')
 
 # Back button to return to User Dashboard
 back_button = tk.Button(profile_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(user_dashboard_frame))

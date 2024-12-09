@@ -12,11 +12,6 @@ def bubble_sort_titles(books):
     books is a list of tuples like (id, title, author, status).
     """
     n = len(books)
-    
-    # Print the books before sorting
-    print("Before Sorting:")
-    for book in books:
-        print(book)
         
     # Extract the titles and their associated book data
     for i in range(n):
@@ -24,11 +19,6 @@ def bubble_sort_titles(books):
             # Compare titles (index 1 is the title)
             if books[j][1].lower() > books[j + 1][1].lower():  
                 books[j], books[j + 1] = books[j + 1], books[j]  # Swap books
-
-    # Print the books after sorting
-    print("\nAfter Sorting:")
-    for book in books:
-        print(book)
 
     return books
 

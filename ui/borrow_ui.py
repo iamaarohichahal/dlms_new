@@ -31,6 +31,7 @@ def verify_user_and_borrow(username_entry, password_entry, shared_data):
     if user and user[2] == password:  # Assuming user[2] is the password field
         user_id = user[0]  # Assuming user[0] is the user ID
         messagebox.showinfo('Success', 'User validated')
+        
         # Get the selected book details from shared_data
         selected_book = shared_data.selected_book
         if selected_book:
@@ -39,6 +40,13 @@ def verify_user_and_borrow(username_entry, password_entry, shared_data):
             # Borrow the book using the borrow_book method in the Database class
             db = Database()
             db.borrow_book(book_id, user_id)
+            
+            # Update the book's status in the books table
+            conn = sqlite3.connect('dlms.db')
+            cursor = conn.cursor()
+            cursor.execute('UPDATE books SET status = "borrowed" WHERE id = ?', (book_id,))
+            conn.commit()
+            conn.close()
             
             messagebox.showinfo('Success', 'Book successfully borrowed!')
 
@@ -70,9 +78,9 @@ def setUp_borrow_books_frame(borrow_frame, shared_data, browse_books_frame):
     # Creating the Treeview to display the selected book details
     book_list_tree = ttk.Treeview(borrow_frame, height=1, columns=('Title', 'Author', 'ISBN'))
     book_list_tree.column('#0', width=0, stretch=tk.NO)
-    book_list_tree.column('Title', anchor=tk.CENTER, width=200)
+    book_list_tree.column('Title', anchor=tk.CENTER, width=400)
     book_list_tree.column('Author', anchor=tk.CENTER, width=200)
-    book_list_tree.column('ISBN', anchor=tk.CENTER, width=100)
+    book_list_tree.column('ISBN', anchor=tk.CENTER, width=400)
 
     book_list_tree.heading('Title', text='Title')
     book_list_tree.heading('Author', text='Author')
