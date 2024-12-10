@@ -9,9 +9,7 @@ class Database:
         self.cursor = self.conn.cursor()
 
     def init_db(self):
-        """
-        Initializes the SQLite databases and creates tables if they do not exist.
-        """
+       
         # Users Table
         self.cursor.execute('''
                        CREATE TABLE IF NOT EXISTS users(
@@ -59,25 +57,18 @@ class Database:
 
 
         self.conn.commit()
-
-        
+    
     def fetch_users(self):
-        """
-        Fetches all users from the 'users' table.
-        """
+       
         self.cursor.execute("SELECT * FROM users")
         return self.cursor.fetchall()
 
     def get_all_books_as_array(self):
-        """
-        Fetches all books from the database and returns them in a simple list/array.
-        Only includes: title, author, status.
-        """
+       
         self.cursor.execute("SELECT title, author, status FROM books")
         books_array = self.cursor.fetchall()
         return books_array
     
-
     def insert_user(self, id, username, password):
         """
         Inserts a new user into the 'users' table.
@@ -85,7 +76,6 @@ class Database:
         self.cursor.execute('INSERT INTO users (id, username, password) VALUES (?, ?, ?)',
                             (id, username, password))
         self.conn.commit()
-
 
     def delete_user(id):
         conn =sqlite3.connect(DB_NAME)
@@ -105,17 +95,12 @@ class Database:
         conn.close()
 
     def fetch_books(self):
-        """
-        Fetches all books from the 'books' table.
-        """
+       
         self.cursor.execute("SELECT * FROM books")
         return self.cursor.fetchall()
  
-
     def insert_book(self,id, isbn, book_title, book_author, book_genre, book_summary, book_status):
-            """
-            Inserts a new  book into the 'books' table.
-            """
+            
             self.cursor.execute('INSERT INTO books (id, isbn, title, author, genre, summary, status) VALUES (?, ?, ?, ? , ? , ? , ?)',
                                 (id, isbn, book_title, book_author, book_genre, book_summary, book_status))
             self.conn.commit()
@@ -138,17 +123,12 @@ class Database:
             conn.close()
 
     def fetch_book_list(self):
-        """
-        Fetches book title, author, and status from the 'books' table.
-        """
+       
         self.cursor.execute("SELECT id, title, author, status FROM books")
         return self.cursor.fetchall()
     
     def borrow_book(self, book_id, user_id):
-        """
-        Inserts a record into the borrowed_books table when a user borrows a book
-        and updates the status of the book in the books table to 'borrowed'.
-        """
+      
         from datetime import datetime, timedelta
         
         # Get the current date and calculate the return date
@@ -180,7 +160,6 @@ class Database:
         ''', (user_id,))
         return self.cursor.fetchall()
     
-
     def get_all_books_as_array(self):
        
         

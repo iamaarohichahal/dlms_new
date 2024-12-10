@@ -1,16 +1,11 @@
 import tkinter as tk
-import sqlite3
 from tkinter import ttk, END
 from db_utils import Database,DB_NAME
 from ui.common import show_frame
-
-
+import sqlite3
 
 def bubble_sort_titles(books):
-    """
-    Sorts a list of books by title (index 1 is the title) using bubble sort.
-    books is a list of tuples like (id, title, author, status).
-    """
+   
     n = len(books)
         
     # Extract the titles and their associated book data
@@ -23,10 +18,7 @@ def bubble_sort_titles(books):
     return books
 
 def add_book_list_to_tree(book_list_tree):
-    """
-    Fetches books from the database, sorts them alphabetically by title using bubble sort,
-    and adds them to the tree view.
-    """
+    
     database = Database()
     books = database.fetch_book_list()
 
@@ -87,10 +79,7 @@ def borrow_book(id, title, author, isbn, summary, borrow_frame, shared_data):
     show_frame(borrow_frame)
 
 def search_books_by_title(search_title_entry, book_list_tree):
-    """
-    Filters books in the database by title based on the text in the search_title_entry box,
-    and updates the Treeview with the matching results.
-    """
+   
     search_term = search_title_entry.get().strip().lower()  # Get the search term and make it lowercase
     if not search_term:
         # If the search term is empty, reload the entire book list
