@@ -1,8 +1,8 @@
 import tkinter as tk
-from tkinter import ttk, messagebox, END
-import sqlite3
-from db_utils import Database, DB_NAME
+from tkinter import ttk, messagebox
 from ui.common import show_frame
+from server.login import Login
+from server.book_management import Book_management
 
 
 def populate_book_details(book_list_tree, shared_data):
@@ -16,28 +16,22 @@ def populate_book_details(book_list_tree, shared_data):
 def verify_user_and_borrow(username_entry, password_entry, shared_data):
     username = username_entry.get()
     password = password_entry.get()
-    conn = sqlite3.connect('dlms.db')
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
-    user = cursor.fetchone()
-    conn.close()
+    login = Login()
 
-    if user and user[2] == password:  
-        user_id = user[0]  
+    if login.validate_user('non_admin', username, password) == True:  
+        user_id = username 
         messagebox.showinfo('Success', 'User validated')
         
        
         selected_book = shared_data.selected_book
         if selected_book:
             book_id = selected_book['id']  
-            db = Database()
-            db.borrow_book(book_id, user_id)
-            conn = sqlite3.connect('dlms.db')
-            cursor = conn.cursor()
-            cursor.execute('UPDATE books SET status = "borrowed" WHERE id = ?', (book_id,))
-            conn.commit()
-            conn.close()
-            messagebox.showinfo('Success', 'Book successfully borrowed!')
+            
+            book_management = Book_management()
+
+            if book_management.borrow_book(user_id, book_id) == True:
+
+                messagebox.showinfo('Success', 'Book successfully borrowed!')
 
         else:
             messagebox.showerror('Error', 'No book selected!')

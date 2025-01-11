@@ -1,4 +1,4 @@
-import sqlite3
+from db_utils import Database
 
 
 class Login:
@@ -8,13 +8,8 @@ class Login:
         else: 
             query = 'SELECT * FROM users WHERE username = ?'
 
-
-        conn = sqlite3.connect('dlms.db')
-        cursor = conn.cursor()
-        
-        cursor.execute(query, (username,))
-        user = cursor.fetchone()
-        conn.close()
+        database = Database()
+        user = database.fetch_query(query, (username,))[0]
 
         if user and user[2] == password:  
             return True

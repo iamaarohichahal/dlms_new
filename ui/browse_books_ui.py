@@ -18,10 +18,11 @@ def add_book_list_to_tree(book_list_tree):
         # `book` is a tuple like (id, title, author, status)
         book_list_tree.insert('', 'end', values=book)
 
-def clear (title_enter, author_enter, isbn_enter, summary_text):
+def clear (title_enter, author_enter, isbn_enter, summary_text,id_enter):
     title_enter.delete(0,END)
     author_enter.delete(0,END)
     isbn_enter.delete(0,END)
+    id_enter.delete(0,END)
     # Clear the Text widget (summary_text)
     summary_text.delete(1.0, tk.END)
 
@@ -33,12 +34,13 @@ def display_book_details(event, book_list_tree, title_enter, author_enter, isbn_
     if selected_item:
         row = book_list_tree.item(selected_item)['values']
         book_id = row[0]  
-        clear(title_enter, author_enter, isbn_enter, summary_text)
+        clear(title_enter, author_enter, isbn_enter, summary_text,id_enter)
         
         book_management = Book_management()
 
         book_details = book_management.get_book(book_id)
         if book_details:
+            print(book_details)
             id_enter.insert(0,book_id)
             title_enter.insert(0, book_details[0]) 
             author_enter.insert(0, book_details[1])  

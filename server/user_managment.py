@@ -1,6 +1,5 @@
+from db_utils import Database
 import sqlite3
-from db_utils import DB_NAME
-
 
 class User_management:
 
@@ -11,15 +10,12 @@ class User_management:
             query = 'INSERT INTO users (username, password) VALUES (?, ?)'
 
         status = 'true'
-        conn = sqlite3.connect(DB_NAME)
-        cursor = conn.cursor()
+        database = Database()
         
         try:
-    
-            cursor.execute(query, (username, password))
-            conn.commit()
+            database.execute_query(query, (username, password))
           
         except sqlite3.IntegrityError:
             status = 'false'
-        conn.close()
+
         return status

@@ -1,7 +1,5 @@
 # db_utils.py
 import sqlite3
-from datetime import datetime,timedelta
-from tkinter import messagebox
 DB_NAME = "dlms.db"
 class Database:
     def __init__(self):
@@ -122,34 +120,7 @@ class Database:
             conn.commit()
             conn.close()
 
-    def fetch_book_list(self):
-       
-        self.cursor.execute("SELECT id, title, author, status FROM books")
-        return self.cursor.fetchall()
     
-    def borrow_book(self, book_id, user_id):
-      
-        from datetime import datetime, timedelta
-        
-        # Get the current date and calculate the return date
-        borrow_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        return_date = (datetime.now() + timedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')
-
-        # Insert the borrowing record into the borrowed_books table
-        self.cursor.execute('''
-            INSERT INTO borrowed_books (book_id, user_id, borrow_date, return_date, status)
-            VALUES (?, ?, ?, ?, ?)
-        ''', (book_id, user_id, borrow_date, return_date, 'borrowed'))
-
-        # Update the status of the book in the books table
-        self.cursor.execute('''
-            UPDATE books
-            SET status = 'borrowed'
-            WHERE id = ?
-        ''', (book_id,))
-
-        # Commit the changes to the database
-        self.conn.commit()
 
     def fetch_borrowed_books_by_user(self, user_id):
         self.cursor.execute('''
@@ -182,6 +153,43 @@ class Database:
             print(book)
 
         return books_array
+    
+    def execute_query(self, query, params=None):
+        """
+        Execute a query that doesn't return results (e.g., INSERT, UPDATE, DELETE).
+        
+        :param query: The SQL query to execute.
+        :param params: Optional tuple of parameters to pass into the query.
+        """
+        try:
+            if not self.conn:
+                raise ConnectionError("Database not connected.")
+            self.cursor.execute(query, params or ())
+            self.conn.commit()
+            print("Query executed successfully.")
+        except sqlite3.Error as e:
+            self.conn.rollback()
+            print(f"Error executing query: {e}")
+            raise
+
+    def fetch_query(self, query, params=None):
+        """
+        Execute a query that fetches results (e.g., SELECT).
+        
+        :param query: The SQL query to execute.
+        :param params: Optional tuple of parameters to pass into the query.
+        :return: List of tuples containing the query results.
+        """
+        try:
+            if not self.conn:
+                raise ConnectionError("Database not connected.")
+            self.cursor.execute(query, params or ())
+            results = self.cursor.fetchall()
+            print("Query executed successfully. Results fetched.")
+            return results
+        except sqlite3.Error as e:
+            print(f"Error executing query: {e}")
+            raise
 
     # Call the function to test
     if __name__ == "__main__":
