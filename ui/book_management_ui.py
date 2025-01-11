@@ -2,10 +2,9 @@ import tkinter as tk
 from tkinter import ttk, messagebox, END
 from ui.common import show_frame
 from db_utils import Database
-
 import tkinter as tk
 from tkinter import messagebox, END
-import sqlite3
+from server.book_management import Book_management
 
 def clear (id_enter, isbn_enter,book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter):
     id_enter.delete(0,END)
@@ -34,8 +33,9 @@ def display_book_data(event,tree,id_enter, isbn_enter,book_title_enter, book_aut
         pass
 
 def add_books_to_tree(tree):
-    database = Database()
-    books = database.fetch_books()
+    book_management = Book_management()
+
+    books = book_management.get_books_2()
     tree.delete(*tree.get_children())
     for book in books:
         tree.insert('', 'end', values=book)
@@ -52,7 +52,9 @@ def insert_books_treeview(id_enter, isbn_enter,book_title_enter, book_author_ent
     if not (id and isbn and Book_title and Book_author and Book_genre and Book_summary and Book_status):
         messagebox.showerror('Error', 'Please enter all the fields')
     else:
-        database.insert_book(id, isbn, Book_title, Book_author ,Book_genre , Book_summary , Book_status)
+        book_management = Book_management()
+
+        book_management.insert_book(id, isbn, Book_title, Book_author ,Book_genre , Book_summary , Book_status)
         add_books_to_tree(tree)
         messagebox.showinfo('Success', "Your data has been inserted")
 
@@ -63,7 +65,8 @@ def delete_book (id_enter, isbn_enter,book_title_enter, book_author_enter, book_
     else:
         id = id_enter.get()
         print("id to be deleted:" + id)
-        Database.delete_book(id)
+        book_management = Book_management()
+        book_management.delete_book(id)
         add_books_to_tree(tree)
         clear(id_enter, isbn_enter,book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter)
         messagebox.showinfo('Success', 'Data has been deleted')
@@ -80,9 +83,12 @@ def edit_book(tree, id_enter, isbn_enter, book_title_enter, book_author_enter, b
         book_genre = book_genre_enter.get()
         book_summary = book_summary_enter.get()
         book_status = book_status_enter.get()
+
+        book_management = Book_management()
+
         
         # Correct order of arguments: isbn, book_title, book_author, book_genre, book_summary, book_status, id
-        Database.update_book(isbn, book_title, book_author, book_genre, book_summary, book_status, id)
+        book_management.edit_book(isbn, book_title, book_author, book_genre, book_summary, book_status, id)
 
         # Refresh the treeview
         add_books_to_tree(tree)

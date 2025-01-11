@@ -19,6 +19,7 @@ class Book_management:
     def get_books(self):
         database = Database()
         books = database.fetch_query("SELECT id, title, author, status FROM books")
+        
 
         # Sort the books by title using bubble sort
         return self.bubble_sort_titles(books)
@@ -34,29 +35,20 @@ class Book_management:
         database = Database()
         return database.fetch_query(query,(f"%{search_text}%",))
 
+    def get_books_2(self):
+        database = Database()
+        return database.fetch_query("SELECT * FROM books")
+
+    def insert_book(self, id, isbn, Book_title, Book_author ,Book_genre , Book_summary , Book_status):
+        database = Database()
+        database.execute_query('INSERT INTO books (id, isbn, title, author, genre, summary, status) VALUES (?, ?, ?, ? , ? , ? , ?)',
+                                (id, isbn, Book_title, Book_author, Book_genre, Book_summary, Book_status))
     
-    def borrow_book(self,user_id,book_id):
-        db = Database()
-        from datetime import datetime, timedelta
-        
-        # Get the current date and calculate the return date
-        borrow_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        return_date = (datetime.now() + timedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')
-
-        # Insert the borrowing record into the borrowed_books table
-        db.execute_query('''
-            INSERT INTO borrowed_books (book_id, user_id, borrow_date, return_date, status)
-            VALUES (?, ?, ?, ?, ?)
-        ''', (book_id, user_id, borrow_date, return_date, 'borrowed'))
-
-        # Update the status of the book in the books table
-        db.execute_query('''
-            UPDATE books
-            SET status = 'borrowed'
-            WHERE id = ?
-        ''', (book_id,))
-
-        db.execute_query('UPDATE books SET status = "borrowed" WHERE id = ?', (book_id,))
-        return True
-
+    def delete_book(self, id):
+        database = Database()
+        database.execute_query('DELETE FROM books WHERE id = ?', (id,))
     
+    def edit_book(self, isbn, book_title, book_author, book_genre, book_summary, book_status, id):
+        database = Database()
+        database.execute_query("UPDATE books SET isbn = ?, title = ? , author = ?, genre = ?, summary= ?, status= ? WHERE id = ?", 
+                        (isbn,book_title, book_author, book_genre,book_summary, book_status, id))

@@ -1,8 +1,8 @@
 import tkinter as tk
-from tkinter import ttk, messagebox, END
+from tkinter import ttk, messagebox
 import sqlite3
 from ui.common import show_frame
-from db_utils import Database
+from server.loan_management import Loan_management
 
 def view_loans(shared_data, loan_details_tree):
     """
@@ -13,17 +13,13 @@ def view_loans(shared_data, loan_details_tree):
     user_id = shared_data.get_user_id()  # Assuming shared_data has a get_user_id() method
 
     if user_id:  # Ensure user_id is valid (logged in)
-        conn = sqlite3.connect('dlms.db')
-        cursor = conn.cursor()
 
         try:
             # Fetch borrowed books and corresponding book details for the logged-in user
-            cursor.execute(''' 
-                SELECT b.book_id, bo.isbn, bo.title, bo.author, bo.genre, bo.summary, b.return_date
-                FROM borrowed_books b
-                JOIN books bo ON b.book_id = bo.id
-                WHERE b.user_id = ?''', (user_id,))
-            borrowed_books = cursor.fetchall()
+
+            loan_management = Loan_management()
+
+            borrowed_books = loan_management.get_loans(user_id)
 
             if borrowed_books:
                 # Clear the Treeview before adding new rows
@@ -38,9 +34,6 @@ def view_loans(shared_data, loan_details_tree):
         
         except sqlite3.Error as e:
             print(f"Error fetching borrowed books: {e}")
-
-        finally:
-            conn.close()
     else:
         print("User is not logged in.")
 

@@ -1,7 +1,8 @@
 import tkinter as tk
-from tkinter import ttk, messagebox, END
-from db_utils import Database
+from tkinter import ttk, messagebox
 import sqlite3
+from server.login import Login
+from server.loan_management import Loan_management
 
 def populate_return_details(book_list_tree, shared_data):
     """
@@ -24,17 +25,13 @@ def verify_user_and_return(username_entry, password_entry, shared_data):
     username = username_entry.get()
     password = password_entry.get()
 
-    # Connect to the database to verify the user
-    conn = sqlite3.connect('dlms.db')
-    cursor = conn.cursor()
-
     try:
-        # Fetch the user record from the database
-        cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
-        user = cursor.fetchone()
 
-        if user and user[2] == password:  # Assuming user[2] is the password field
-            user_id = user[0]  # Assuming user[0] is the user ID
+        login = Login()
+        
+        if login.validate_user('non_admin', username, password) == True:
+    
+            user_id = username
             messagebox.showinfo('Success', 'User validated')
 
             # Get the selected book details from shared_data
@@ -43,19 +40,11 @@ def verify_user_and_return(username_entry, password_entry, shared_data):
                 book_id = selected_book['book_id']  # Assuming 'id' is the book ID in shared_data
 
                 # Check if the book exists in the borrowed_books table for this user
-                cursor.execute(
-                    'SELECT * FROM borrowed_books WHERE book_id = ? AND user_id = ?',
-                    (book_id, user_id)
-                )
-                borrowed_book = cursor.fetchone()
+                loan_management = Loan_management()
 
-                if borrowed_book:
-                    # Remove the book from the borrowed_books table
-                    cursor.execute(
-                        'DELETE FROM borrowed_books WHERE book_id = ? AND user_id = ?',
-                        (book_id, user_id)
-                    )
-                    conn.commit()
+                status = loan_management.return_borrowed_book(book_id,user_id)
+
+                if  status == True: 
                     messagebox.showinfo('Success', 'Book successfully returned!')
                 else:
                     messagebox.showerror('Error', 'This book is not recorded as borrowed by the user.')
@@ -65,9 +54,6 @@ def verify_user_and_return(username_entry, password_entry, shared_data):
             messagebox.showerror('Error', 'Invalid username or password')
     except sqlite3.Error as e:
         messagebox.showerror('Database Error', f"An error occurred: {e}")
-    finally:
-        conn.close()
-
 
 def setUp_loan_return_frame(loan_return_frame, show_frame, loan_details_frame, shared_data):
 

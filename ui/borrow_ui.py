@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from ui.common import show_frame
 from server.login import Login
-from server.book_management import Book_management
+from server.loan_management import Loan_management
 
 
 def populate_book_details(book_list_tree, shared_data):
@@ -27,9 +27,9 @@ def verify_user_and_borrow(username_entry, password_entry, shared_data):
         if selected_book:
             book_id = selected_book['id']  
             
-            book_management = Book_management()
+            loan_management = Loan_management()
 
-            if book_management.borrow_book(user_id, book_id) == True:
+            if loan_management.borrow_book(user_id, book_id) == True:
 
                 messagebox.showinfo('Success', 'Book successfully borrowed!')
 

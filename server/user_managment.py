@@ -19,3 +19,21 @@ class User_management:
             status = 'false'
 
         return status
+
+    def get_users(self):
+        database = Database()
+        return database.fetch_query("SELECT * FROM users")
+    
+    def insert_user(self,id,username,password):
+        database = Database()
+
+        database.execute_query('INSERT INTO users (id, username, password) VALUES (?, ?, ?)',(id, username, password))
+
+    def delete_user(self,id):
+         database = Database()
+         database.execute_query('DELETE FROM users WHERE id = ?', (id,))
+
+    def edit_user(self,id,username,password):
+         database = Database()
+         database.execute_query("UPDATE users SET username = ?, password = ? WHERE id = ?", 
+                    (username, password, id))

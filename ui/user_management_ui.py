@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox, END
 from ui.common import show_frame
 from db_utils import Database
+from server.user_managment import User_management
 
 
 def clear (id_enter, username_enter, password_enter):
@@ -24,22 +25,24 @@ def display_user_data(event,tree,id_enter, username_enter, password_enter):
 
     
 def add_users_to_tree(tree):
-    database = Database()
-    users = database.fetch_users()
+    user_management = User_management()
+    users = user_management.get_users()
     tree.delete(*tree.get_children())
     for user in users:
         tree.insert('', 'end', values=user)
 
 
 def insert_user_treeview(id_enter,username_enter, password_enter,tree):
-    database = Database()
+
     id = id_enter.get()
     username = username_enter.get()
     password = password_enter.get()
     if not (id and username and password):
         messagebox.showerror('Error', 'Please enter all the fields')
     else:
-        database.insert_user(id, username, password)
+
+        user_management = User_management()
+        user_management.insert_user(id, username, password)
         add_users_to_tree(tree)
         messagebox.showinfo('Success', "Your data has been inserted")
 
@@ -50,7 +53,8 @@ def delete_user (id_enter,username_enter, password_enter,tree):
     else:
         id = id_enter.get()
         print("id to be deleted:" + id)
-        Database.delete_user(id)
+        user_management= User_management()
+        user_management.delete_user(id)
         add_users_to_tree(tree)
         clear(id_enter,username_enter, password_enter)
         messagebox.showinfo('Success', 'Data has been deleted')
@@ -65,7 +69,8 @@ def edit_user(tree, id_enter, username_enter, password_enter):
         password = password_enter.get()
         
         # Correct order of arguments: username, password, id
-        Database.update_user(username, password, id)
+        user_management = User_management()
+        user_management.edit_user(id,username,password)
 
         # Refresh the treeview
         add_users_to_tree(tree)
