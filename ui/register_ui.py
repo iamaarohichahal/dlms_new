@@ -1,14 +1,15 @@
 import tkinter as tk
-import sqlite3
-from tkinter import messagebox, simpledialog, PhotoImage
+from tkinter import messagebox, simpledialog
 from ui.common import show_frame
-from user_managment import register_user
-from db_utils import DB_NAME
+from server.user_managment import User_management
 
 
 
-def local_register_user(username, password,login_frame):
-    status = register_user(username, password)
+
+def register_user(type_of_user,username, password,login_frame):
+    user_management = User_management()
+
+    status = user_management.register_user(type_of_user, username, password)
 
     if status == 'true':
 
@@ -18,22 +19,7 @@ def local_register_user(username, password,login_frame):
        
         messagebox.showerror('Error', 'Username already exists')
 
-def register_admin(username, password, login_frame):
 
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-    
-    try:
-       
-        cursor.execute('INSERT INTO admin (username, password) VALUES (?, ?)', (username, password))
-        conn.commit()
-     
-        messagebox.showinfo('Registration', 'Registration successful! Please log in.')
-        show_frame(login_frame) 
-    except sqlite3.IntegrityError:
-      
-        messagebox.showerror('Error', 'Username already exists')
-    conn.close()
 
 # -------------------------------------------
 # Registration Frame Setup
@@ -55,7 +41,7 @@ def setUp_Register(login_frame, register_frame, user_dashboard_frame, admin_dash
 
     # Register button for User
     user_register_button = tk.Button(register_frame, text="Register User", font=("Arial", 14), 
-                                    command=lambda: local_register_user(
+                                    command=lambda: register_user('non_admin', 
                                         simpledialog.askstring("Register User", "Enter username:"),
                                         simpledialog.askstring("Register User", "Enter password:", show='*'),
                                         user_dashboard_frame
@@ -64,7 +50,7 @@ def setUp_Register(login_frame, register_frame, user_dashboard_frame, admin_dash
 
     # Register button for Admin
     admin_register_button = tk.Button(register_frame, text="Register Admin", font=("Arial", 14), 
-                                    command=lambda: register_admin(
+                                    command=lambda: register_user('admin', 
                                         simpledialog.askstring("Register Admin", "Enter username:"),
                                         simpledialog.askstring("Register Admin", "Enter password:", show='*'),
                                         admin_dashboard_frame

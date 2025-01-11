@@ -4,40 +4,26 @@ from werkzeug.security import check_password_hash
 from tkinter import messagebox, simpledialog, PhotoImage
 from ui.common import show_frame
 from db_utils import DB_NAME
+from server.login import Login
 
 
 def login_user(username, password, user_dashboard_frame, shared_data):
-    conn = sqlite3.connect('dlms.db')
-    cursor = conn.cursor()
-    
-    cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
-    user = cursor.fetchone()
-    conn.close()
+    login = Login()
+    if login.validate_user('non_admin', username,password) ==  True:
 
-    if user and user[2] == password:  
-        user_id = user[0]  
-        print(f"User {username} logged in with User ID: {user_id}")
+        print(f"User {username} logged in with User ID: {username}")
         
-        shared_data.set_user_id(user_id)
+        shared_data.set_user_id(username)
         
         show_frame(user_dashboard_frame)
     else:
         messagebox.showerror('Error', 'Invalid username or password')
 
 
-
-
         
 def login_admin(username, password, admin_dashboard_frame):
-   
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM admin WHERE username = ?', (username,))
-    admin = cursor.fetchone()
-    conn.close()
-
-    
-    if admin and admin[2] == password: 
+    login = Login()
+    if login.validate_user('admin',username, password) == True:
         show_frame(admin_dashboard_frame)
     else:
         messagebox.showerror('Error', 'Invalid username or password')

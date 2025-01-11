@@ -1,30 +1,15 @@
 import tkinter as tk
 from tkinter import ttk, END
-from db_utils import Database,DB_NAME
 from ui.common import show_frame
-import sqlite3
+from server.book_management import Book_management
 
-def bubble_sort_titles(books):
-   
-    n = len(books)
-        
-    # Extract the titles and their associated book data
-    for i in range(n):
-        for j in range(0, n - i - 1):
-            # Compare titles (index 1 is the title)
-            if books[j][1].lower() > books[j + 1][1].lower():  
-                books[j], books[j + 1] = books[j + 1], books[j]  # Swap books
 
-    return books
 
 def add_book_list_to_tree(book_list_tree):
+
+    book_management = Book_management()
     
-    database = Database()
-    books = database.fetch_book_list()
-
-    # Sort the books by title using bubble sort
-    sorted_books = bubble_sort_titles(books)
-
+    sorted_books = book_management.get_books()
     # Delete existing entries in the tree view
     book_list_tree.delete(*book_list_tree.get_children())
 
@@ -49,21 +34,16 @@ def display_book_details(event, book_list_tree, title_enter, author_enter, isbn_
         row = book_list_tree.item(selected_item)['values']
         book_id = row[0]  
         clear(title_enter, author_enter, isbn_enter, summary_text)
-        conn = sqlite3.connect(DB_NAME) 
-        cursor = conn.cursor()
         
-        cursor.execute("SELECT title, author, isbn, summary FROM books WHERE id=?", (book_id,))
-        book_details = cursor.fetchone()
+        book_management = Book_management()
 
+        book_details = book_management.get_book(book_id)
         if book_details:
             id_enter.insert(0,book_id)
             title_enter.insert(0, book_details[0]) 
             author_enter.insert(0, book_details[1])  
             isbn_enter.insert(0, book_details[2])  
             summary_text.insert(1.0, book_details[3]) 
-        
-    
-        conn.close()
     else:
         pass  
 
@@ -78,99 +58,24 @@ def borrow_book(id, title, author, isbn, summary, borrow_frame, shared_data):
     }
     show_frame(borrow_frame)
 
-def search_books_by_title(search_title_entry, book_list_tree):
+def search_books_by_coloumn(coloumn,search_title_entry, book_list_tree):
    
     search_term = search_title_entry.get().strip().lower()  # Get the search term and make it lowercase
     if not search_term:
         # If the search term is empty, reload the entire book list
         add_book_list_to_tree(book_list_tree)
         return
+    
+    book_management = Book_management()
 
-    # Connect to the database and fetch books with titles containing the search term
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-
-    # Use SQL LIKE operator to perform a case-insensitive search
-    cursor.execute("SELECT id, title, author, status FROM books WHERE LOWER(title) LIKE ?", (f"%{search_term}%",))
-    filtered_books = cursor.fetchall()
-    conn.close()
+    filtered_books = book_management.search_books(coloumn,search_term)
 
     # Update the Treeview with the filtered books
     book_list_tree.delete(*book_list_tree.get_children())  # Clear existing rows
     for book in filtered_books:
         book_list_tree.insert('', 'end', values=book)
 
-def search_books_by_isbn(search_isbn_entry, book_list_tree):
-    """
-    Filters books in the database by ISBN based on the text in the search_isbn_entry box,
-    and updates the Treeview with the matching results.
-    """
-    search_term = search_isbn_entry.get().strip().lower()  # Get the search term and make it lowercase
-    if not search_term:
-        # If the search term is empty, reload the entire book list
-        add_book_list_to_tree(book_list_tree)
-        return
 
-    # Connect to the database and fetch books with ISBN containing the search term
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT id, title, author, status FROM books WHERE LOWER(isbn) LIKE ?", (f"%{search_term}%",))
-    filtered_books = cursor.fetchall()
-    conn.close()
-
-    # Update the Treeview with the filtered books
-    book_list_tree.delete(*book_list_tree.get_children())  # Clear existing rows
-    for book in filtered_books:
-        book_list_tree.insert('', 'end', values=book)
-
-def search_books_by_author(search_author_entry, book_list_tree):
-    """
-    Filters books in the database by author based on the text in the search_author_entry box,
-    and updates the Treeview with the matching results.
-    """
-    search_term = search_author_entry.get().strip().lower()  # Get the search term and make it lowercase
-    if not search_term:
-        # If the search term is empty, reload the entire book list
-        add_book_list_to_tree(book_list_tree)
-        return
-
-    # Connect to the database and fetch books with authors containing the search term
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT id, title, author, status FROM books WHERE LOWER(author) LIKE ?", (f"%{search_term}%",))
-    filtered_books = cursor.fetchall()
-    conn.close()
-
-    # Update the Treeview with the filtered books
-    book_list_tree.delete(*book_list_tree.get_children())  # Clear existing rows
-    for book in filtered_books:
-        book_list_tree.insert('', 'end', values=book)
-
-def search_books_by_genre(search_genre_entry, book_list_tree):
-    """
-    Filters books in the database by genre based on the text in the search_genre_entry box,
-    and updates the Treeview with the matching results.
-    """
-    search_term = search_genre_entry.get().strip().lower()  # Get the search term and make it lowercase
-    if not search_term:
-        # If the search term is empty, reload the entire book list
-        add_book_list_to_tree(book_list_tree)
-        return
-
-    # Connect to the database and fetch books with genres containing the search term
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT id, title, author, status FROM books WHERE LOWER(genre) LIKE ?", (f"%{search_term}%",))
-    filtered_books = cursor.fetchall()
-    conn.close()
-
-    # Update the Treeview with the filtered books
-    book_list_tree.delete(*book_list_tree.get_children())  # Clear existing rows
-    for book in filtered_books:
-        book_list_tree.insert('', 'end', values=book)
    
 def setUp_browse_books(browse_books_frame, shared_data, borrow_frame):
 
@@ -224,16 +129,16 @@ def setUp_browse_books(browse_books_frame, shared_data, borrow_frame):
     search_genre_entry.grid(row=1, column=3, padx=10, pady=10)
 
     # Search Buttons for each function
-    search_isbn_button = tk.Button(search_frame, text="Search by ISBN", font=("Arial", 14), bg="#1A8F2D", fg="white", bd=2, command=lambda: search_books_by_isbn(search_isbn_entry, book_list_tree))
+    search_isbn_button = tk.Button(search_frame, text="Search by ISBN", font=("Arial", 14), bg="#1A8F2D", fg="white", bd=2, command=lambda: search_books_by_coloumn('isbn',search_isbn_entry, book_list_tree))
     search_isbn_button.grid(row=2, column=0, pady=10)
 
-    search_title_button = tk.Button(search_frame, text="Search by Title", font=("Arial", 14), bg="#1A8F2D", fg="white", bd=2, command=lambda: search_books_by_title(search_title_entry, book_list_tree))
+    search_title_button = tk.Button(search_frame, text="Search by Title", font=("Arial", 14), bg="#1A8F2D", fg="white", bd=2, command=lambda: search_books_by_coloumn('title', search_title_entry, book_list_tree))
     search_title_button.grid(row=2, column=1, pady=10)
 
-    search_author_button = tk.Button(search_frame, text="Search by Author", font=("Arial", 14), bg="#1A8F2D", fg="white", bd=2, command=lambda: search_books_by_author(search_author_entry, book_list_tree))
+    search_author_button = tk.Button(search_frame, text="Search by Author", font=("Arial", 14), bg="#1A8F2D", fg="white", bd=2, command=lambda: search_books_by_coloumn('author', search_author_entry, book_list_tree))
     search_author_button.grid(row=2, column=2, pady=10)
 
-    search_genre_button = tk.Button(search_frame, text="Search by Genre", font=("Arial", 14), bg="#1A8F2D", fg="white", bd=2, command=lambda: search_books_by_genre(search_genre_entry, book_list_tree))
+    search_genre_button = tk.Button(search_frame, text="Search by Genre", font=("Arial", 14), bg="#1A8F2D", fg="white", bd=2, command=lambda: search_books_by_coloumn('genre', search_genre_entry, book_list_tree))
     search_genre_button.grid(row=2, column=3, pady=10)
 
     
