@@ -8,37 +8,30 @@ from db_utils import DB_NAME
 
 
 def local_register_user(username, password,login_frame):
-    """
-    Registers a new user locally by calling the register_user function.
-    Displays appropriate message boxes based on registration status.
-    """
     status = register_user(username, password)
 
     if status == 'true':
-        # If registration is successful, show success message and navigate to login frame
+
         messagebox.showinfo('Registration', 'Registration successful! Please log in.')
-        show_frame(login_frame)  # Show login frame after successful registration
+        show_frame(login_frame) 
     else:
-        # If registration fails (e.g., username already exists), show error message
+       
         messagebox.showerror('Error', 'Username already exists')
 
 def register_admin(username, password, login_frame):
-    """
-    Registers a new admin by inserting the username and password (plain text) into admin.db.
-    Displays appropriate message boxes based on registration outcome.
-    """
+
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     
     try:
-        # Attempt to insert new admin credentials into the admin table
+       
         cursor.execute('INSERT INTO admin (username, password) VALUES (?, ?)', (username, password))
         conn.commit()
-        # On success, show success message and navigate to login frame
+     
         messagebox.showinfo('Registration', 'Registration successful! Please log in.')
-        show_frame(login_frame)  # Show login frame after successful registration
+        show_frame(login_frame) 
     except sqlite3.IntegrityError:
-        # If insertion fails (e.g., username already exists), show error message
+      
         messagebox.showerror('Error', 'Username already exists')
     conn.close()
 

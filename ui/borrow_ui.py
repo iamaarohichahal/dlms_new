@@ -8,7 +8,7 @@ from ui.common import show_frame
 def populate_book_details(book_list_tree, shared_data):
     selected_book = shared_data.selected_book
     if selected_book:
-        # Clear existing items in the Treeview
+     
         book_list_tree.delete(*book_list_tree.get_children())
         # Populate the Treeview with selected book details
         book_list_tree.insert('', 'end', values=(selected_book['title'], selected_book['author'], selected_book['isbn']))
@@ -16,38 +16,27 @@ def populate_book_details(book_list_tree, shared_data):
 def verify_user_and_borrow(username_entry, password_entry, shared_data):
     username = username_entry.get()
     password = password_entry.get()
-
-    # Connect to the database to verify the user
     conn = sqlite3.connect('dlms.db')
     cursor = conn.cursor()
-    
-    # Fetch the user record from the database
     cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
     user = cursor.fetchone()
-
-    # Close the connection
     conn.close()
 
-    if user and user[2] == password:  # Assuming user[2] is the password field
-        user_id = user[0]  # Assuming user[0] is the user ID
+    if user and user[2] == password:  
+        user_id = user[0]  
         messagebox.showinfo('Success', 'User validated')
         
-        # Get the selected book details from shared_data
+       
         selected_book = shared_data.selected_book
         if selected_book:
-            book_id = selected_book['id']  # Assuming the 'id' field exists in shared_data for the book
-            
-            # Borrow the book using the borrow_book method in the Database class
+            book_id = selected_book['id']  
             db = Database()
             db.borrow_book(book_id, user_id)
-            
-            # Update the book's status in the books table
             conn = sqlite3.connect('dlms.db')
             cursor = conn.cursor()
             cursor.execute('UPDATE books SET status = "borrowed" WHERE id = ?', (book_id,))
             conn.commit()
             conn.close()
-            
             messagebox.showinfo('Success', 'Book successfully borrowed!')
 
         else:

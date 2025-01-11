@@ -7,27 +7,19 @@ from db_utils import DB_NAME
 
 
 def login_user(username, password, user_dashboard_frame, shared_data):
-    """
-    Logs in a user by verifying the username and password against the user.db database.
-    Navigates to the user dashboard upon successful login.
-    """
     conn = sqlite3.connect('dlms.db')
     cursor = conn.cursor()
     
-    # Fetch the user record from the database
     cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
     user = cursor.fetchone()
     conn.close()
 
-    # Verify password (comparing directly, assuming stored as plain text)
-    if user and user[2] == password:  # user[2] is the stored password
-        user_id = user[0]  # user[0] is the user ID from the table
+    if user and user[2] == password:  
+        user_id = user[0]  
         print(f"User {username} logged in with User ID: {user_id}")
         
-        # Set the user_id in shared data (passing user_id, not username)
         shared_data.set_user_id(user_id)
         
-        # Navigate to the user dashboard
         show_frame(user_dashboard_frame)
     else:
         messagebox.showerror('Error', 'Invalid username or password')
@@ -37,20 +29,15 @@ def login_user(username, password, user_dashboard_frame, shared_data):
 
         
 def login_admin(username, password, admin_dashboard_frame):
-    """
-    Logs in an admin by verifying the username and password against the admin.db database.
-    Navigates to the admin dashboard upon successful login.
-    """
+   
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
-    
-    # Fetch the admin record from the database
     cursor.execute('SELECT * FROM admin WHERE username = ?', (username,))
     admin = cursor.fetchone()
     conn.close()
 
-    # Verify password (comparing directly, assuming stored as plain text)
-    if admin and admin[2] == password:  # admin[2] should be the stored password
+    
+    if admin and admin[2] == password: 
         show_frame(admin_dashboard_frame)
     else:
         messagebox.showerror('Error', 'Invalid username or password')
