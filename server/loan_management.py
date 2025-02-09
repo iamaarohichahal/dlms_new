@@ -70,15 +70,14 @@ class Loan_management:
     JOIN books bo ON b.book_id = bo.id
     ''')
     
-    def get_overdue_books(user_id):
-    
-        database = Database()  
+    def get_overdue_books(self, user_id):
+        database = Database()  # Assuming the Database object is defined and works as expected
         query = '''
-        SELECT b.book_id, b.user_id, bo.title, b.return_date, b.status
-    FROM borrowed_books b
-    JOIN books bo ON b.book_id = bo.id
-    WHERE b.user_id = ?
-    '''
-       
+        SELECT b.book_id, bo.title
+        FROM borrowed_books b
+        JOIN books bo ON b.book_id = bo.id
+        WHERE b.user_id = ? AND b.status = 'overdue'
+        '''
         return database.fetch_query(query, (user_id,))
+
             

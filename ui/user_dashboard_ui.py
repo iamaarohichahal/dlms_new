@@ -12,12 +12,31 @@ def update_time(clock_label):
     clock_label.config(text=f"{current_date} {current_time}")
     clock_label.after(1000, update_time, clock_label)  # Update the clock every second
 
+def view_overdue_books(overdue_books_tree, shared_data):
+    """
+    Updates the Treeview with overdue books for the current user.
+    """
+    user_id = shared_data.get_user_id()  # Get the user_id from shared_data
 
+    # Assuming you have a method in Loan_management to get overdue books for a specific user
+    loan_management = Loan_management()
+    overdue_books = loan_management.get_overdue_books(user_id)
+
+    # Clear existing items in the Treeview
+    overdue_books_tree.delete(*overdue_books_tree.get_children())
+
+    # Check if there are overdue books and insert them into the Treeview
+    if overdue_books:
+        for loan in overdue_books:
+            # Assuming loan[0] is Book ID and loan[1] is Book Title, adjust according to your actual data structure
+            overdue_books_tree.insert('', 'end', values=(loan[0], loan[1]))
+    else:
+        messagebox.showinfo("No Overdue Books", "You don't have any overdue books.")
 
 # -------------------------------------------
 # User Dashbaord Set Up
 # -------------------------------------------
-def setUp_user_dash(user_dashboard_frame, browse_books_frame,profile_frame,login_frame):
+def setUp_user_dash(user_dashboard_frame, browse_books_frame,profile_frame,login_frame,shared_data):
 
 
     # Load the background image
@@ -77,3 +96,7 @@ def setUp_user_dash(user_dashboard_frame, browse_books_frame,profile_frame,login
 
     # Placing the Treeview widget for overdue books
     overdue_books_tree.place(x=20, y=150)
+
+    view_button = tk.Button(user_dashboard_frame, text="View", font=("Arial", 12, "bold"), bg="#4CAF50", fg="white", width=15, height=2,
+                        command=lambda: view_overdue_books(overdue_books_tree, shared_data))
+    view_button.place(x=20, y=300)

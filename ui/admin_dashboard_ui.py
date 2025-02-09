@@ -7,7 +7,7 @@ from ui.common import show_frame
 # Admin Dashboard Frame Setup
 # -------------------------------------------
 
-def setUp_admin_dash(admin_dashboard_frame, user_management_frame,book_management_frame,loan_management_frame,login_frame):
+def setUp_admin_dash(admin_dashboard_frame, user_management_frame,book_management_frame,loan_management_frame,login_frame, admin_wishlist_frame):
     # Load the background image
     bg_image = tk.PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
 
@@ -32,6 +32,10 @@ def setUp_admin_dash(admin_dashboard_frame, user_management_frame,book_managemen
     loan_management_button = tk.Button(admin_dashboard_frame, text="Manage Loans", font=("Arial", 14), command=lambda: show_frame(loan_management_frame))
     loan_management_button.place(relx=0.5, rely=0.5, anchor='center')
 
+    # Button to navigate to Book Wishlist
+    book_wishlist_button = tk.Button(admin_dashboard_frame, text="Book Wishlist", font=("Arial", 14), command=lambda: show_frame(admin_wishlist_frame))
+    book_wishlist_button.place(relx=0.5, rely=0.6, anchor='center')
+
     # Logout button for Admin
     btn_logout_admin = tk.Button(admin_dashboard_frame, text="Logout", font=("times new roman", 12, "bold"), bg="white", width=15, command=lambda: show_frame(login_frame))
-    btn_logout_admin.place(relx=0.5, rely=0.6, anchor='center')
+    btn_logout_admin.place(relx=0.5, rely=0.7, anchor='center')

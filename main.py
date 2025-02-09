@@ -13,8 +13,8 @@ from ui.browse_books_ui import setUp_browse_books
 from ui.borrow_ui import setUp_borrow_books_frame
 from ui.loan_details_ui import setUp_loan_details
 from ui.loan_return_ui import setUp_loan_return_frame
-from ui.borrow_history_ui import setUp_borrowing_history
 from ui.loan_management_ui import setUp_loan_management
+from ui.user_wishlist_ui import setUp_user_wishlist_frame
 from shared import Shared
 
 
@@ -70,13 +70,15 @@ reports_frame = tk.Frame(app, bg="white")
 settings_frame = tk.Frame(app, bg="white")
 borrow_frame = tk.Frame(app, bg="white")
 loan_return_frame= tk.Frame(app,bg="white")
+user_wishlist_frame= tk.Frame(app,bg="white")
+admin_wishlist_frame = tk.Frame(app,bg="white")
 
 
 
 # Place all frames to occupy the full window
 for frame in (login_frame, register_frame, user_dashboard_frame, add_book_frame, browse_books_frame, profile_frame, deposit_book_frame, 
               account_details_frame, loan_details_frame, borrowing_history_frame, wishlist_frame, admin_dashboard_frame, user_management_frame, 
-              book_management_frame, loan_management_frame, reports_frame, settings_frame, borrow_frame,loan_return_frame):
+              book_management_frame, loan_management_frame, reports_frame, settings_frame, borrow_frame,loan_return_frame,user_wishlist_frame, admin_wishlist_frame):
     frame.place(relwidth=1, relheight=1)
 
 shared_data = Shared()
@@ -84,9 +86,9 @@ setUp_Login(login_frame, register_frame, user_dashboard_frame, admin_dashboard_f
 
 setUp_Register(login_frame, register_frame, user_dashboard_frame, admin_dashboard_frame)
 
-setUp_admin_dash(admin_dashboard_frame, user_management_frame,book_management_frame,loan_management_frame,login_frame)
+setUp_admin_dash(admin_dashboard_frame, user_management_frame,book_management_frame,loan_management_frame,login_frame,admin_wishlist_frame)
 
-setUp_user_dash(user_dashboard_frame, browse_books_frame,profile_frame,login_frame)
+setUp_user_dash(user_dashboard_frame, browse_books_frame,profile_frame,login_frame,shared_data)
 
 setUp_user_management(user_management_frame,admin_dashboard_frame)
 
@@ -101,9 +103,11 @@ setUp_loan_details(loan_details_frame,user_dashboard_frame,shared_data,loan_retu
 
 setUp_loan_return_frame(loan_return_frame, show_frame, loan_details_frame, shared_data)
 
-setUp_borrowing_history(borrowing_history_frame,profile_frame)
+
 
 setUp_loan_management(loan_management_frame, admin_dashboard_frame)
+
+setUp_user_wishlist_frame(user_wishlist_frame,profile_frame)
 
 
 
@@ -131,8 +135,9 @@ title.place(x=0, y=0, relwidth=1, height=70)
 loan_details_button = tk.Button(profile_frame, text="Loan Details", font=("Arial", 14), command=lambda: show_frame(loan_details_frame))
 loan_details_button.place(relx=0.5, rely=0.4, anchor='center')
 
-borrowing_history_button = tk.Button(profile_frame, text="Borrowing History", font=("Arial", 14), command=lambda: show_frame(borrowing_history_frame))
-borrowing_history_button.place(relx=0.5, rely=0.5, anchor='center')
+my_wishlist_button = tk.Button(profile_frame, text="My Wishlist", font=("Arial", 14), command=lambda: show_frame(user_wishlist_frame))
+my_wishlist_button.place(relx=0.5, rely=0.5, anchor='center')
+
 
 
 # Back button to return to User Dashboard
@@ -165,9 +170,6 @@ setup_frame(account_details_frame, "Account Details", lambda: show_frame(profile
 
 # Setting up Borrowing History Frame
 setup_frame(borrowing_history_frame, "Borrowing History", lambda: show_frame(profile_frame))
-
-# Setting up Wishlist Frame
-setup_frame(wishlist_frame, "Wishlist", lambda: show_frame(profile_frame))
 
 # -------------------------------------------
 # Initial Frame Display
