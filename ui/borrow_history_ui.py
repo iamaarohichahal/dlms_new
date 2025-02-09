@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, END
-import sqlite3
 from ui.common import show_frame
 from db_utils import Database
 
@@ -46,6 +45,8 @@ def setUp_borrowing_history(borrowing_history_frame,profile_frame):
     tree.column('Book Genre', anchor=tk.CENTER, width=100)
     tree.column('Book Summary', anchor=tk.CENTER, width=200)
     tree.column('Return Date', anchor=tk.CENTER, width=250)
+
+
 
     # Defining headings
     tree.heading('ID', text='ID')

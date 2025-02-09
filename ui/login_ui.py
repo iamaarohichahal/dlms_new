@@ -7,6 +7,7 @@ from db_utils import DB_NAME
 from server.login import Login
 
 
+
 def login_user(username, password, user_dashboard_frame, shared_data):
     login = Login()
     if login.validate_user('non_admin', username,password) ==  True:

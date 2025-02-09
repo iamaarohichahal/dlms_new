@@ -14,6 +14,7 @@ from ui.borrow_ui import setUp_borrow_books_frame
 from ui.loan_details_ui import setUp_loan_details
 from ui.loan_return_ui import setUp_loan_return_frame
 from ui.borrow_history_ui import setUp_borrowing_history
+from ui.loan_management_ui import setUp_loan_management
 from shared import Shared
 
 
@@ -85,7 +86,7 @@ setUp_Register(login_frame, register_frame, user_dashboard_frame, admin_dashboar
 
 setUp_admin_dash(admin_dashboard_frame, user_management_frame,book_management_frame,loan_management_frame,login_frame)
 
-setUp_user_dash(user_dashboard_frame, browse_books_frame,deposit_book_frame,profile_frame,login_frame)
+setUp_user_dash(user_dashboard_frame, browse_books_frame,profile_frame,login_frame)
 
 setUp_user_management(user_management_frame,admin_dashboard_frame)
 
@@ -101,6 +102,8 @@ setUp_loan_details(loan_details_frame,user_dashboard_frame,shared_data,loan_retu
 setUp_loan_return_frame(loan_return_frame, show_frame, loan_details_frame, shared_data)
 
 setUp_borrowing_history(borrowing_history_frame,profile_frame)
+
+setUp_loan_management(loan_management_frame, admin_dashboard_frame)
 
 
 

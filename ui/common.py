@@ -7,6 +7,7 @@ def show_frame(frame):
     Brings the specified frame to the front, making it visible.
     """
     frame.tkraise()
+    
 
 
 def display_books(books,browse_books_frame,user_dashboard_frame):

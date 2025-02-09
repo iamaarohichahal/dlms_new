@@ -1,4 +1,5 @@
 from db_utils import Database
+from datetime import datetime, timedelta
 
 
 class Loan_management:
@@ -27,26 +28,57 @@ class Loan_management:
         else:
               return False 
 
-    def borrow_book(self,user_id,book_id):
-        db = Database()
-        from datetime import datetime, timedelta
+    def borrow_book(self, user_id, book_id):
+        database = Database()
         
         # Get the current date and calculate the return date
         borrow_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         return_date = (datetime.now() + timedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')
 
         # Insert the borrowing record into the borrowed_books table
-        db.execute_query('''
+        database.execute_query('''
             INSERT INTO borrowed_books (book_id, user_id, borrow_date, return_date, status)
             VALUES (?, ?, ?, ?, ?)
         ''', (book_id, user_id, borrow_date, return_date, 'borrowed'))
 
         # Update the status of the book in the books table
-        db.execute_query('''
+        database.execute_query('''
             UPDATE books
             SET status = 'borrowed'
             WHERE id = ?
         ''', (book_id,))
 
-        db.execute_query('UPDATE books SET status = "borrowed" WHERE id = ?', (book_id,))
         return True
+
+    def check_and_update_overdue_books(self):
+        database = Database()
+        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        # Update status of overdue books
+        database.execute_query('''
+            UPDATE borrowed_books
+            SET status = 'overdue'
+            WHERE return_date < ? AND status = 'borrowed'
+        ''', (current_datetime,))
+        
+    def get_loans_2(self):
+        database = Database()
+
+        return database.fetch_query(''' 
+     SELECT b.book_id, b.user_id, bo.title, b.return_date, b.status
+    FROM borrowed_books b
+    JOIN books bo ON b.book_id = bo.id
+    ''')
+    
+    def get_overdue_books(user_id):
+    
+        database = Database()  
+        query = '''
+        SELECT b.book_id, b.user_id, bo.title, b.return_date, b.status
+    FROM borrowed_books b
+    JOIN books bo ON b.book_id = bo.id
+    WHERE b.user_id = ?
+    '''
+       
+        return database.fetch_query(query, (user_id,))
+            
