@@ -132,12 +132,11 @@ title = tk.Label(profile_frame, text="My Profile", font=("times new roman", 40, 
 title.place(x=0, y=0, relwidth=1, height=70)
 
 # Profile management buttons
-loan_details_button = tk.Button(profile_frame, text="Loan Details", font=("Arial", 14), command=lambda: show_frame(loan_details_frame))
+loan_details_button = tk.Button(profile_frame, text="Loan Details", font=("Arial", 16, "bold"), bg="#4CAF50", fg="white", width=20, height=2, relief="solid", command=lambda: show_frame(loan_details_frame))
 loan_details_button.place(relx=0.5, rely=0.4, anchor='center')
 
-my_wishlist_button = tk.Button(profile_frame, text="My Wishlist", font=("Arial", 14), command=lambda: show_frame(user_wishlist_frame))
+my_wishlist_button = tk.Button(profile_frame, text="My Wishlist", font=("Arial", 16, "bold"), bg="#4CAF50", fg="white", width=20, height=2, relief="solid", command=lambda: show_frame(user_wishlist_frame))
 my_wishlist_button.place(relx=0.5, rely=0.5, anchor='center')
-
 
 
 # Back button to return to User Dashboard
