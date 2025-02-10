@@ -111,67 +111,77 @@ def setUp_book_management(book_management_frame,admin_dashboard_frame):
     bg_label.image = bg_image  
     bg_label.place(relwidth=1, relheight=1)  # Make it cover the entire frame
     # Title label for Book Management Frame
-    book_management_label = tk.Label(book_management_frame, text="Book Management", font=("Arial", 20), bg="lightblue")
-    book_management_label.pack(pady=10)
+    book_management_label = tk.Label(book_management_frame, text="Book Management",  font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
+    book_management_label.place(x=0, y=0, relwidth=1, height=70)
+
 
     # Labels and Entry fields for Book Details
 
-    id_label = tk.Label(book_management_frame, font=("Arial", 14), text= "ID ", bg="#69359c", fg="white")
-    id_label.place(x=20, y=50)
+    id_label = tk.Label(book_management_frame, font=("Arial", 14), text= "ID ", bg="white", fg="black")
+    id_label.place(x=20, y=80)
 
-    id_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="#69359c", fg="white")
-    id_enter.place(x=150, y=50)
+    id_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="white")
+    id_enter.place(x=150, y=80)
 
-    isbn_label = tk.Label(book_management_frame, font=("Arial", 14), text= "ISBN ", bg="#69359c", fg="white")
-    isbn_label.place(x=20, y=110)
+    isbn_label = tk.Label(book_management_frame, font=("Arial", 14), text= "ISBN ", bg="white", fg="black")
+    isbn_label.place(x=20, y=140)
 
-    isbn_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="#69359c", fg="white")
-    isbn_enter.place(x=150, y=110)
+    isbn_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="white")
+    isbn_enter.place(x=150, y=140)
 
-    book_title_label = tk.Label(book_management_frame, font=("Arial", 14), text="Book Title", bg="#69359c", fg="white")
-    book_title_label.place(x=20, y=170)
+    book_title_label = tk.Label(book_management_frame, font=("Arial", 14), text="Book Title", bg="white", fg="black")
+    book_title_label.place(x=20, y=200)
 
-    book_title_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="#69359c", fg="white")
-    book_title_enter.place(x=150, y=170)
+    book_title_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="white")
+    book_title_enter.place(x=150, y=200)
 
-    book_author_label = tk.Label(book_management_frame, font=("Arial", 14), text="Book Author", bg="#69359c", fg="white")
-    book_author_label.place(x=20, y=230)
+    book_author_label = tk.Label(book_management_frame, font=("Arial", 14), text="Book Author", bg="white", fg="black")
+    book_author_label.place(x=20, y=260)
 
-    book_author_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="#69359c", fg="white")
-    book_author_enter.place(x=150, y=230)
+    book_author_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="white")
+    book_author_enter.place(x=150, y=260)
 
-    book_genre_label = tk.Label(book_management_frame, font=("Arial", 14), text="Genre", bg="#69359c", fg="white")
-    book_genre_label.place(x=20, y=290)
+    book_genre_label = tk.Label(book_management_frame, font=("Arial", 14), text="Genre", bg="white", fg="black")
+    book_genre_label.place(x=20, y=320)
 
-    book_genre_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="#69359c", fg="white")
-    book_genre_enter.place(x=150, y=290)
+    book_genre_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="white")
+    book_genre_enter.place(x=150, y=320)
 
-    book_summary_label = tk.Label(book_management_frame, font=("Arial", 14), text="Summary", bg="#69359c", fg="white")
-    book_summary_label.place(x=20, y=350)
+    book_summary_label = tk.Label(book_management_frame, font=("Arial", 14), text="Summary", bg="white", fg="black")
+    book_summary_label.place(x=20, y=380)
 
-    book_summary_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="#69359c", fg="white")
-    book_summary_enter.place(x=150, y=350)
+    book_summary_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="white")
+    book_summary_enter.place(x=150, y=380)
 
-    book_status_label = tk.Label(book_management_frame, font=("Arial", 14), text="Status", bg="#69359c", fg="white")
-    book_status_label.place(x=20, y=410)
+    book_status_label = tk.Label(book_management_frame, font=("Arial", 14), text="Status", bg="white", fg="black")
+    book_status_label.place(x=20, y=440)
 
     book_status_enter = ttk.Combobox(book_management_frame, font=("Arial", 14), width=18)
     book_status_enter['values'] = ("Available", "Borrowed")  # Set the options in the drop-down
-    book_status_enter.place(x=150, y=410)
+    book_status_enter.place(x=150, y=440)
 
+
+    button_style = {
+        "font": ("Arial", 14),
+        "bg": "#1A8F2D",
+        "fg": "white",
+        "width": 20,
+        "height": 2
+    }
 
     # Buttons for User Management Actions
-    add_book_button = tk.Button(book_management_frame, font=("Arial", 14), text="Add Book", command=lambda:insert_books_treeview(id_enter, isbn_enter,book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter,tree))
-    add_book_button.place(x=20, y=450)
+    add_book_button = tk.Button(book_management_frame, text="Add Book", command=lambda: insert_books_treeview(id_enter, isbn_enter, book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter, tree), **button_style)
+    add_book_button.place(x=20, y=480)
 
-    edit_book_button = tk.Button(book_management_frame, font=("Arial", 14), text="Edit Book", command=lambda:edit_book(tree, id_enter, isbn_enter,book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter))
-    edit_book_button.place(x=20, y=500)
+    edit_book_button = tk.Button(book_management_frame, text="Edit Book", command=lambda: edit_book(tree, id_enter, isbn_enter, book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter), **button_style)
+    edit_book_button.place(x=20, y=580)
 
-    view_book_button = tk.Button(book_management_frame, font=("Arial", 14), text="View Book")
-    view_book_button.place(x=20, y=550)
+    view_book_button = tk.Button(book_management_frame, text="View Book", **button_style)
+    view_book_button.place(x=20, y=680)
 
-    delete_book_button = tk.Button(book_management_frame, font=("Arial", 14), text="Delete Book", command=lambda:delete_book(id_enter, isbn_enter,book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter,tree))
-    delete_book_button.place(x=20, y=600)
+    delete_book_button = tk.Button(book_management_frame, text="Delete Book", command=lambda: delete_book(id_enter, isbn_enter, book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter, tree), **button_style)
+    delete_book_button.place(x=20, y=780)
+
 
     # Styling for the Treeview widget
     style = ttk.Style(book_management_frame)
@@ -206,12 +216,20 @@ def setUp_book_management(book_management_frame,admin_dashboard_frame):
     tree.heading('Status', text='Status')
 
     # Placing the Treeview widget
-    tree.place(x=400, y=50)
+    tree.place(x=400, y=80)
 
     add_books_to_tree(tree)
 
-    # Back button to return to Admin Dashboard
-    back_button = tk.Button(book_management_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(admin_dashboard_frame))
+    back_button = tk.Button(
+        book_management_frame, 
+        text="Back", 
+        font=("Arial", 14, "bold"), 
+        bg="#1A8F2D",  # Green background (adjust as needed)
+        fg="white",  # White text
+        width= 20,
+        height= 2,
+        command=lambda: show_frame(admin_dashboard_frame)
+    )
     back_button.place(relx=0.5, rely=0.9, anchor='center')
 
     # Bind the <<TreeviewSelect>> event to the display_book_data function

@@ -120,51 +120,83 @@ def setUp_user_management(user_management_frame,admin_dashboard_frame):
     tree.heading('Password', text='Password')
 
     # Placing the Treeview widget
-    tree.place(x=450, y=50)
+    tree.place(x=450, y=100)
 
 
     add_users_to_tree(tree)
     # Title label for User Management Frame
-    user_management_label = tk.Label(user_management_frame, text="User Management", font=("Arial", 20), bg="lightgrey")
-    user_management_label.pack(pady=10)
+    user_management_label = tk.Label(user_management_frame, text="User Management",  font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
+    user_management_label.place(x=0, y=0, relwidth=1, height=70)
 
     
 
     # Labels and Entry fields for User Details
-    id_label = tk.Label(user_management_frame, font=("Arial", 14), text="User ID", bg="#69359c", fg="white")
-    id_label.place(x=20, y=50)
+    id_label = tk.Label(user_management_frame, font=("Arial", 14), text="User ID", bg="white", fg="black")
+    id_label.place(x=20, y=100)
 
-    id_enter = tk.Entry(user_management_frame, font=("Arial", 14), bd=2, width=25, bg="#69359c", fg="white")
-    id_enter.place(x=150, y=50)
+    id_enter = tk.Entry(user_management_frame, font=("Arial", 14), bd=2, width=25, bg="white", fg="white")
+    id_enter.place(x=150, y=100)
 
-    username_label = tk.Label(user_management_frame, font=("Arial", 14), text="Username", bg="#69359c", fg="white")
-    username_label.place(x=20, y=110)
+    username_label = tk.Label(user_management_frame, font=("Arial", 14), text="Username", bg="white", fg="black")
+    username_label.place(x=20, y=160)
 
-    username_enter = tk.Entry(user_management_frame, font=("Arial", 14), bd=2, width=25, bg="#69359c", fg="white")
-    username_enter.place(x=150, y=110)
+    username_enter = tk.Entry(user_management_frame, font=("Arial", 14), bd=2, width=25, bg="white", fg="white")
+    username_enter.place(x=150, y=160)
 
-    password_label = tk.Label(user_management_frame, font=("Arial", 14), text="Password", bg="#69359c", fg="white")
-    password_label.place(x=20, y=170)
+    password_label = tk.Label(user_management_frame, font=("Arial", 14), text="Password", bg="white", fg="black")
+    password_label.place(x=20, y=220)
 
-    password_enter = tk.Entry(user_management_frame, font=("Arial", 14), bd=2, width=25, bg="#69359c", fg="white")
-    password_enter.place(x=150, y=170)
+    password_enter = tk.Entry(user_management_frame, font=("Arial", 14), bd=2, width=25, bg="white", fg="white")
+    password_enter.place(x=150, y=220)
+
+        # Button style
+    button_style = {
+        "font": ("Arial", 14),
+        "bg": "#1A8F2D",
+        "fg": "white",
+        "width": 20,
+        "height": 2
+    }
 
     # Buttons for User Management Actions
-    add_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="Add User", command=lambda:insert_user_treeview(id_enter,username_enter, password_enter,tree))
-    add_user_button.place(x=20, y=300)
+    add_user_button = tk.Button(
+        user_management_frame,
+        text="Add User",
+        command=lambda: insert_user_treeview(id_enter, username_enter, password_enter, tree),
+        **button_style
+    )
+    add_user_button.place(x=20, y=350)
 
-    edit_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="Edit User", command=lambda:edit_user(tree, id_enter, username_enter, password_enter))
-    edit_user_button.place(x=20, y=400)
+    edit_user_button = tk.Button(
+        user_management_frame,
+        text="Edit User",
+        command=lambda: edit_user(tree, id_enter, username_enter, password_enter),
+        **button_style
+    )
+    edit_user_button.place(x=20, y=450)
 
-    view_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="View User")
-    view_user_button.place(x=20, y=500)
+    view_user_button = tk.Button(
+        user_management_frame,
+        text="View User",
+        **button_style
+    )
+    view_user_button.place(x=20, y=550)
 
-    delete_user_button = tk.Button(user_management_frame, font=("Arial", 14), text="Delete User", command=lambda:delete_user(id_enter,username_enter, password_enter,tree))
-    delete_user_button.place(x=20, y=600)
+    delete_user_button = tk.Button(
+        user_management_frame,
+        text="Delete User",
+        command=lambda: delete_user(id_enter, username_enter, password_enter, tree),
+        **button_style
+    )
+    delete_user_button.place(x=20, y=650)
 
-   
     # Back button to return to Admin Dashboard
-    back_button = tk.Button(user_management_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(admin_dashboard_frame))
+    back_button = tk.Button(
+        user_management_frame,
+        text="Back",
+        command=lambda: show_frame(admin_dashboard_frame),
+        **button_style
+    )
     back_button.place(relx=0.5, rely=0.9, anchor='center')
 
     # Bind the <<TreeviewSelect>> event to the display_user_data function
