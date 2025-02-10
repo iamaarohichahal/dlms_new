@@ -7,7 +7,7 @@ class Loan_management:
         database = Database()
 
         return database.fetch_query(''' 
-                SELECT b.book_id, bo.isbn, bo.title, bo.author, bo.genre, bo.summary, b.return_date
+                SELECT b.book_id, bo.title, bo.author, bo.genre, b.return_date
                 FROM borrowed_books b
                 JOIN books bo ON b.book_id = bo.id
                 WHERE b.user_id = ?''', (user_id,))
@@ -81,3 +81,4 @@ class Loan_management:
         return database.fetch_query(query, (user_id,))
 
             
+

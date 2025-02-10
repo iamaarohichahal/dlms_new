@@ -140,8 +140,8 @@ my_wishlist_button.place(relx=0.5, rely=0.5, anchor='center')
 
 
 # Back button to return to User Dashboard
-back_button = tk.Button(profile_frame, text="Back", font=("Arial", 14), command=lambda: show_frame(user_dashboard_frame))
-back_button.place(relx=0.5, rely=0.9, anchor='center')
+back_button = tk.Button(profile_frame, text="Back", font=("Arial", 16, "bold"), bg="#4CAF50", fg="white", width=20, height=2, relief="solid", command=lambda: show_frame(user_dashboard_frame))
+back_button.place(relx=0.5, rely=0.6, anchor='center')
 
 # -------------------------------------------
 # Other Frames Setup

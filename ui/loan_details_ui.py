@@ -27,8 +27,8 @@ def view_loans(shared_data, loan_details_tree):
                 
                 # Loop through the fetched data and insert into Treeview
                 for book in borrowed_books:
-                    book_id, isbn, title, author, genre, summary, return_date = book
-                    loan_details_tree.insert('', 'end', values=(book_id, isbn, title, author, genre, summary, return_date))
+                    book_id, title, author, genre, return_date = book
+                    loan_details_tree.insert('', 'end', values=(book_id, title, author, genre, return_date))
             else:
                 print("No borrowed books found.")
         
@@ -50,12 +50,10 @@ def handle_return_book(loan_details_tree, loan_return_frame, loan_details_frame,
         selected_book = loan_details_tree.item(selected_item[0], 'values')
         shared_data.selected_book = {
             'book_id': selected_book[0],
-            'isbn': selected_book[1],
-            'title': selected_book[2],
-            'author': selected_book[3],
-            'genre': selected_book[4],
-            'summary': selected_book[5],
-            'return_date': selected_book[6],
+            'title': selected_book[1],
+            'author': selected_book[2],
+            'genre': selected_book[3],
+            'return_date': selected_book[4],
         }
         
         # Show the Loan Return Frame
@@ -63,6 +61,7 @@ def handle_return_book(loan_details_tree, loan_return_frame, loan_details_frame,
     else:
         # Display error message if no row is selected
         messagebox.showerror("Error", "Please select a book to return.")
+
 
 
 
@@ -80,8 +79,8 @@ def setUp_loan_details(loan_details_frame, user_dashboard_frame, shared_data, lo
     bg_label.place(relwidth=1, relheight=1)  # Make it cover the entire frame
 
     # Title label for Loan Details Frame
-    loan_details_label = tk.Label(loan_details_frame, text="Loan Details", font=("Arial", 20), bg="lightblue")
-    loan_details_label.pack(pady=10)
+    loan_details_label = tk.Label(loan_details_frame, text="Loan Details", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
+    loan_details_label.place(x=0, y=0, relwidth=1, height=70)
 
     # Styling for the Treeview widget
     style = ttk.Style(loan_details_frame)
@@ -90,42 +89,44 @@ def setUp_loan_details(loan_details_frame, user_dashboard_frame, shared_data, lo
     style.map('Treeview', background=[('selected', '#1A8F2D')])
 
     # Creating the Treeview widget to display book data
-    loan_details_tree = ttk.Treeview(loan_details_frame, height=20)  
+    loan_details_tree = ttk.Treeview(loan_details_frame, height=18)  
 
     # Defining columns for the Treeview
-    loan_details_tree['columns'] = ('ID', 'ISBN', 'Book Title', 'Book Author', 'Book Genre', 'Book Summary', 'Return Date')
+    loan_details_tree['columns'] = ('ID', 'Book Title', 'Book Author', 'Book Genre', 'Return Date')
 
     # Configuring columns
     loan_details_tree.column('#0', width=0, stretch=tk.NO)
     loan_details_tree.column('ID', anchor=tk.CENTER, width=50)
-    loan_details_tree.column('ISBN', anchor=tk.CENTER, width=250)
-    loan_details_tree.column('Book Title', anchor=tk.CENTER, width=200)
-    loan_details_tree.column('Book Author', anchor=tk.CENTER, width=200)
-    loan_details_tree.column('Book Genre', anchor=tk.CENTER, width=100)
-    loan_details_tree.column('Book Summary', anchor=tk.CENTER, width=200)
-    loan_details_tree.column('Return Date', anchor=tk.CENTER, width=250)
+    loan_details_tree.column('Book Title', anchor=tk.CENTER, width=250)
+    loan_details_tree.column('Book Author', anchor=tk.CENTER, width=250)
+    loan_details_tree.column('Book Genre', anchor=tk.CENTER, width=150)
+    loan_details_tree.column('Return Date', anchor=tk.CENTER, width=200)
 
     # Defining headings
     loan_details_tree.heading('ID', text='ID')
-    loan_details_tree.heading('ISBN', text='ISBN')
     loan_details_tree.heading('Book Title', text='Book Title')
     loan_details_tree.heading('Book Author', text='Book Author')
     loan_details_tree.heading('Book Genre', text='Book Genre')
-    loan_details_tree.heading('Book Summary', text='Book Summary')
     loan_details_tree.heading('Return Date', text='Return Date')
 
-    # Place the Treeview widget in the center
-    loan_details_tree.place(relx=0.5, rely=0.5, anchor='center')  # Centered using relx, rely, and anchor
+    # Place the Treeview widget to take up most of the screen
+    loan_details_tree.place(relx=0.5, rely=0.45, anchor='center', relwidth=0.9, relheight=0.7)  
 
     # Buttons for Return Book, Back, and View Loans
-    return_button = tk.Button(loan_details_frame, text="Return Book", font=("Arial", 14), 
+    button_width = 20
+    button_height = 2
+
+    return_button = tk.Button(loan_details_frame, text="Return Book", font=("Arial", 16, "bold"), bg="#4CAF50", fg="white",
+                              width=button_width, height=button_height, relief="solid",
                               command=lambda: handle_return_book(loan_details_tree, loan_return_frame, loan_details_frame, shared_data))
-    return_button.place(relx=0.4, rely=0.9, anchor='center')
+    return_button.place(relx=0.25, rely=0.9, anchor='center')
 
-    back_button = tk.Button(loan_details_frame, text="Back", font=("Arial", 14), 
+    back_button = tk.Button(loan_details_frame, text="Back", font=("Arial", 16, "bold"), bg="#4CAF50", fg="white",
+                            width=button_width, height=button_height, relief="solid",
                             command=lambda: show_frame(user_dashboard_frame))
-    back_button.place(relx=0.6, rely=0.9, anchor='center')
+    back_button.place(relx=0.5, rely=0.9, anchor='center')
 
-    view_loans_button = tk.Button(loan_details_frame, text="View Loans", font=("Arial", 14), 
+    view_loans_button = tk.Button(loan_details_frame, text="View Loans", font=("Arial", 16, "bold"), bg="#4CAF50", fg="white",
+                                  width=button_width, height=button_height, relief="solid",
                                   command=lambda: view_loans(shared_data, loan_details_tree))
-    view_loans_button.place(relx=0.8, rely=0.9, anchor='center')
+    view_loans_button.place(relx=0.75, rely=0.9, anchor='center')
