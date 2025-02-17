@@ -1,8 +1,10 @@
 from db_utils import Database
 import sqlite3
 
-class User_management:
-
+class User:
+    def get_login_query(self):
+        return ""
+    
     def register_user(self,type_of_user, username, password):
         if type_of_user == 'admin':
             query = 'INSERT INTO admin (username, password) VALUES (?, ?)'

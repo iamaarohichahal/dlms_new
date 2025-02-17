@@ -1,15 +1,18 @@
 from db_utils import Database
+from server.admin_user import Admin_user
+from server.normal_user import Normal_user
+
 
 
 class Login:
     def validate_user(self,type_of_user, username, password):
         if type_of_user == 'admin':
-            query = 'SELECT * FROM admin WHERE username = ?'
+            user = Admin_user()
         else: 
-            query = 'SELECT * FROM users WHERE username = ?'
+            user = Normal_user()
 
         database = Database()
-        user = database.fetch_query(query, (username,))[0]
+        user = database.fetch_query(user.get_login_query(), (username,))[0]
 
         if user and user[2] == password:  
             return True

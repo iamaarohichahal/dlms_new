@@ -9,7 +9,6 @@ from tkinter import ttk
 
 
 
-
 def setUp_user_wishlist_frame(user_wishlist_frame, profile_frame):
     # Load the background image
     bg_image = tk.PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")

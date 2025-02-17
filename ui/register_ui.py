@@ -1,13 +1,13 @@
 import tkinter as tk
 from tkinter import messagebox, simpledialog
 from ui.common import show_frame
-from server.user_managment import User_management
+from server.user_managment import User
 
 
 
 
 def register_user(type_of_user,username, password,login_frame):
-    user_management = User_management()
+    user_management = User()
 
     status = user_management.register_user(type_of_user, username, password)
 

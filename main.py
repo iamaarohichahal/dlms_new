@@ -15,6 +15,7 @@ from ui.loan_details_ui import setUp_loan_details
 from ui.loan_return_ui import setUp_loan_return_frame
 from ui.loan_management_ui import setUp_loan_management
 from ui.user_wishlist_ui import setUp_user_wishlist_frame
+from ui.admin_wishlist_ui import setUp_admin_wishlist_frame
 from shared import Shared
 
 
@@ -109,7 +110,7 @@ setUp_loan_management(loan_management_frame, admin_dashboard_frame)
 
 setUp_user_wishlist_frame(user_wishlist_frame,profile_frame)
 
-
+setUp_admin_wishlist_frame(admin_wishlist_frame)
 
 
 

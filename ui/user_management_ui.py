@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox, END
 from ui.common import show_frame
 from db_utils import Database
-from server.user_managment import User_management
+from server.user_managment import User
 
 
 def clear (id_enter, username_enter, password_enter):
@@ -25,7 +25,7 @@ def display_user_data(event,tree,id_enter, username_enter, password_enter):
 
     
 def add_users_to_tree(tree):
-    user_management = User_management()
+    user_management = User()
     users = user_management.get_users()
     tree.delete(*tree.get_children())
     for user in users:
@@ -41,7 +41,7 @@ def insert_user_treeview(id_enter,username_enter, password_enter,tree):
         messagebox.showerror('Error', 'Please enter all the fields')
     else:
 
-        user_management = User_management()
+        user_management = User()
         user_management.insert_user(id, username, password)
         add_users_to_tree(tree)
         messagebox.showinfo('Success', "Your data has been inserted")
@@ -53,7 +53,7 @@ def delete_user (id_enter,username_enter, password_enter,tree):
     else:
         id = id_enter.get()
         print("id to be deleted:" + id)
-        user_management= User_management()
+        user_management= User()
         user_management.delete_user(id)
         add_users_to_tree(tree)
         clear(id_enter,username_enter, password_enter)
