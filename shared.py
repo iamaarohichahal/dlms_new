@@ -1,16 +1,18 @@
+import queue
+
 class Shared:
     def __init__(self):
         self._userId = "" 
-        self.selected_book = None  # Add selected_book attribute to store selected book details
+        self.selected_book = None  
+        self.wishlist_queue = queue.Queue()
 
     def get_user_id(self):
         return self._userId
 
     def set_user_id(self, value):
-        # Print the user_id (even if it's an integer)
+
         print("set user:", value)
     
-        # Ensure the value is stored as a string
         self._userId = str(value)
 
     def set_selected_book(self, book_details):
@@ -21,3 +23,6 @@ class Shared:
 
     def get_selected_book(self):
         return self.selected_book
+    
+    def get_wishlist_queue(self):
+        return self.wishlist_queue

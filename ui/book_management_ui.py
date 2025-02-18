@@ -4,7 +4,7 @@ from ui.common import show_frame
 from db_utils import Database
 import tkinter as tk
 from tkinter import messagebox, END
-from server.book_management import Book_management
+from server.book_management import Book
 
 def clear (id_enter, isbn_enter,book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter):
     id_enter.delete(0,END)
@@ -33,7 +33,7 @@ def display_book_data(event,tree,id_enter, isbn_enter,book_title_enter, book_aut
         pass
 
 def add_books_to_tree(tree):
-    book_management = Book_management()
+    book_management = Book()
 
     books = book_management.get_books_2()
     tree.delete(*tree.get_children())
@@ -52,7 +52,7 @@ def insert_books_treeview(id_enter, isbn_enter,book_title_enter, book_author_ent
     if not (id and isbn and Book_title and Book_author and Book_genre and Book_summary and Book_status):
         messagebox.showerror('Error', 'Please enter all the fields')
     else:
-        book_management = Book_management()
+        book_management = Book()
 
         book_management.insert_book(id, isbn, Book_title, Book_author ,Book_genre , Book_summary , Book_status)
         add_books_to_tree(tree)
@@ -65,7 +65,7 @@ def delete_book (id_enter, isbn_enter,book_title_enter, book_author_enter, book_
     else:
         id = id_enter.get()
         print("id to be deleted:" + id)
-        book_management = Book_management()
+        book_management = Book()
         book_management.delete_book(id)
         add_books_to_tree(tree)
         clear(id_enter, isbn_enter,book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter)
@@ -83,81 +83,68 @@ def edit_book(tree, id_enter, isbn_enter, book_title_enter, book_author_enter, b
         book_genre = book_genre_enter.get()
         book_summary = book_summary_enter.get()
         book_status = book_status_enter.get()
-
-        book_management = Book_management()
-
-        
-        # Correct order of arguments: isbn, book_title, book_author, book_genre, book_summary, book_status, id
+        book_management = Book()
         book_management.edit_book(isbn, book_title, book_author, book_genre, book_summary, book_status, id)
-
-        # Refresh the treeview
         add_books_to_tree(tree)
-        
-        # Clear the entry fields
-        clear(id_enter, isbn_enter, book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter)
-        
+        clear(id_enter, isbn_enter, book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter)      
         messagebox.showinfo('Success', 'Data has been edited')
 
-# -------------------------------------------
-# Book Management Frame Setup
-# -------------------------------------------
+
 def setUp_book_management(book_management_frame,admin_dashboard_frame):
 
-    # Load the background image
     bg_image = tk.PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
 
-    # Add the background image to the frame
+ 
     bg_label = tk.Label(book_management_frame, image=bg_image)
     bg_label.image = bg_image  
-    bg_label.place(relwidth=1, relheight=1)  # Make it cover the entire frame
-    # Title label for Book Management Frame
+    bg_label.place(relwidth=1, relheight=1)  
+
     book_management_label = tk.Label(book_management_frame, text="Book Management",  font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
     book_management_label.place(x=0, y=0, relwidth=1, height=70)
 
 
-    # Labels and Entry fields for Book Details
 
     id_label = tk.Label(book_management_frame, font=("Arial", 14), text= "ID ", bg="white", fg="black")
     id_label.place(x=20, y=80)
 
-    id_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="white")
+    id_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="black")
     id_enter.place(x=150, y=80)
 
     isbn_label = tk.Label(book_management_frame, font=("Arial", 14), text= "ISBN ", bg="white", fg="black")
     isbn_label.place(x=20, y=140)
 
-    isbn_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="white")
+    isbn_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="black")
     isbn_enter.place(x=150, y=140)
 
     book_title_label = tk.Label(book_management_frame, font=("Arial", 14), text="Book Title", bg="white", fg="black")
     book_title_label.place(x=20, y=200)
 
-    book_title_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="white")
+    book_title_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="black")
     book_title_enter.place(x=150, y=200)
 
     book_author_label = tk.Label(book_management_frame, font=("Arial", 14), text="Book Author", bg="white", fg="black")
     book_author_label.place(x=20, y=260)
 
-    book_author_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="white")
+    book_author_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="black")
     book_author_enter.place(x=150, y=260)
 
     book_genre_label = tk.Label(book_management_frame, font=("Arial", 14), text="Genre", bg="white", fg="black")
     book_genre_label.place(x=20, y=320)
 
-    book_genre_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="white")
+    book_genre_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="black")
     book_genre_enter.place(x=150, y=320)
 
     book_summary_label = tk.Label(book_management_frame, font=("Arial", 14), text="Summary", bg="white", fg="black")
     book_summary_label.place(x=20, y=380)
 
-    book_summary_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="white")
+    book_summary_enter = tk.Entry(book_management_frame, font=("Arial", 14), bd=2, width=20, bg="white", fg="black")
     book_summary_enter.place(x=150, y=380)
 
     book_status_label = tk.Label(book_management_frame, font=("Arial", 14), text="Status", bg="white", fg="black")
     book_status_label.place(x=20, y=440)
 
     book_status_enter = ttk.Combobox(book_management_frame, font=("Arial", 14), width=18)
-    book_status_enter['values'] = ("Available", "Borrowed")  # Set the options in the drop-down
+    book_status_enter['values'] = ("Available", "Borrowed")
     book_status_enter.place(x=150, y=440)
 
 
@@ -169,7 +156,7 @@ def setUp_book_management(book_management_frame,admin_dashboard_frame):
         "height": 2
     }
 
-    # Buttons for User Management Actions
+
     add_book_button = tk.Button(book_management_frame, text="Add Book", command=lambda: insert_books_treeview(id_enter, isbn_enter, book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter, tree), **button_style)
     add_book_button.place(x=20, y=480)
 
@@ -183,20 +170,17 @@ def setUp_book_management(book_management_frame,admin_dashboard_frame):
     delete_book_button.place(x=20, y=780)
 
 
-    # Styling for the Treeview widget
+   
     style = ttk.Style(book_management_frame)
     style.theme_use('clam')
     style.configure('Treeview', font=("Arial", 14))
     style.map('Treeview', background=[('selected', '#1A8F2D')])
 
-    # Creating the Treeview widget to display book data
     tree = ttk.Treeview(book_management_frame, height=30)
 
-    # Defining columns for the Treeview
     tree['columns'] = ('ID','ISBN', 'Book Title', 'Book Author', 'Book Genre', 'Book Summary', 'Status')
 
 
-    # Configuring columns
     tree.column('#0', width=0, stretch=tk.NO)
     tree.column('ID', anchor=tk.CENTER, width=50)
     tree.column('ISBN', anchor=tk.CENTER, width=100)
@@ -206,7 +190,7 @@ def setUp_book_management(book_management_frame,admin_dashboard_frame):
     tree.column('Book Summary', anchor=tk.CENTER, width=200)
     tree.column('Status', anchor=tk.CENTER, width=100)
 
-    # Defining headings
+   
     tree.heading('ID', text='ID')
     tree.heading('ISBN', text='ISBN')
     tree.heading('Book Title', text='Book Title')
@@ -215,22 +199,12 @@ def setUp_book_management(book_management_frame,admin_dashboard_frame):
     tree.heading('Book Summary', text='Book Summary')
     tree.heading('Status', text='Status')
 
-    # Placing the Treeview widget
+
     tree.place(x=400, y=80)
 
     add_books_to_tree(tree)
 
-    back_button = tk.Button(
-        book_management_frame, 
-        text="Back", 
-        font=("Arial", 14, "bold"), 
-        bg="#1A8F2D",  # Green background (adjust as needed)
-        fg="white",  # White text
-        width= 20,
-        height= 2,
-        command=lambda: show_frame(admin_dashboard_frame)
-    )
+    back_button = tk.Button(book_management_frame, text="Back", font=("Arial", 14, "bold"), bg="#1A8F2D", width= 20,height= 2,command=lambda: show_frame(admin_dashboard_frame))
     back_button.place(relx=0.5, rely=0.9, anchor='center')
 
-    # Bind the <<TreeviewSelect>> event to the display_book_data function
     tree.bind('<<TreeviewSelect>>' ,  lambda event: display_book_data(event,tree,id_enter, isbn_enter,book_title_enter, book_author_enter, book_genre_enter, book_summary_enter, book_status_enter))

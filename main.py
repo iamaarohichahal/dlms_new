@@ -21,38 +21,30 @@ from shared import Shared
 
 
 
-# Create an instance of the Database class and initialize it
+# Database Initialization
 database = Database()
 database.init_db()
 database.close()
 
-# -------------------------------------------
-# Application Initialization
-# -------------------------------------------
 
-# Initialize the Tkinter application
+# Application Initialization
 app = tk.Tk()
 app.title("Library Management System")
 app.geometry("1400x1000")
 
-# Load the background image
+
 image_path = PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
 
-# -------------------------------------------
-# Frame Definitions
-# -------------------------------------------
 
-# Define all frames with white background
-
-# Create the login frame
+# Login Frame
 login_frame = tk.Frame(app, bg='white')
 login_frame.place(relheight=1, relwidth=1)
 
-# Add the background image to the login frame
+
 bg_image = tk.Label(login_frame, image=image_path)
 bg_image.place(relheight=1, relwidth=1)
 
-
+# Frame Definitions
 register_frame = tk.Frame(app, bg='white')
 user_dashboard_frame = tk.Frame(app, bg='white')
 admin_dashboard_frame = tk.Frame(app, bg='white')
@@ -76,7 +68,7 @@ admin_wishlist_frame = tk.Frame(app,bg="white")
 
 
 
-# Place all frames to occupy the full window
+
 for frame in (login_frame, register_frame, user_dashboard_frame, add_book_frame, browse_books_frame, profile_frame, deposit_book_frame, 
               account_details_frame, loan_details_frame, borrowing_history_frame, wishlist_frame, admin_dashboard_frame, user_management_frame, 
               book_management_frame, loan_management_frame, reports_frame, settings_frame, borrow_frame,loan_return_frame,user_wishlist_frame, admin_wishlist_frame):
@@ -96,7 +88,7 @@ setUp_user_management(user_management_frame,admin_dashboard_frame)
 setUp_book_management(book_management_frame,admin_dashboard_frame)
 
 
-setUp_browse_books(browse_books_frame, shared_data, borrow_frame)
+setUp_browse_books(browse_books_frame, shared_data, borrow_frame,user_dashboard_frame)
 
 setUp_borrow_books_frame(borrow_frame, shared_data,browse_books_frame)
 
@@ -108,31 +100,26 @@ setUp_loan_return_frame(loan_return_frame, show_frame, loan_details_frame, share
 
 setUp_loan_management(loan_management_frame, admin_dashboard_frame)
 
-setUp_user_wishlist_frame(user_wishlist_frame,profile_frame)
+setUp_user_wishlist_frame(user_wishlist_frame, profile_frame,shared_data)
 
-setUp_admin_wishlist_frame(admin_wishlist_frame)
-
-
+setUp_admin_wishlist_frame(admin_wishlist_frame, shared_data,admin_dashboard_frame)
 
 
 
-# -------------------------------------------
+
+
+
 # Profile Frame Setup
-# -------------------------------------------
-
-# Title label for Profile Frame
-
- # Load the background image
+ 
 bg_image = tk.PhotoImage(file=r"C:\Users\iamaa\software\CSIA\dlms\images\bg.png")
 
-# Add the background image to the frame
 bg_label = tk.Label(profile_frame, image=bg_image)
 bg_label.image = bg_image  
-bg_label.place(relwidth=1, relheight=1)  # Make it cover the entire frame
+bg_label.place(relwidth=1, relheight=1) 
 title = tk.Label(profile_frame, text="My Profile", font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
 title.place(x=0, y=0, relwidth=1, height=70)
 
-# Profile management buttons
+
 loan_details_button = tk.Button(profile_frame, text="Loan Details", font=("Arial", 16, "bold"), bg="#4CAF50", fg="white", width=20, height=2, relief="solid", command=lambda: show_frame(loan_details_frame))
 loan_details_button.place(relx=0.5, rely=0.4, anchor='center')
 
@@ -140,40 +127,17 @@ my_wishlist_button = tk.Button(profile_frame, text="My Wishlist", font=("Arial",
 my_wishlist_button.place(relx=0.5, rely=0.5, anchor='center')
 
 
-# Back button to return to User Dashboard
 back_button = tk.Button(profile_frame, text="Back", font=("Arial", 16, "bold"), bg="#4CAF50", fg="white", width=20, height=2, relief="solid", command=lambda: show_frame(user_dashboard_frame))
 back_button.place(relx=0.5, rely=0.6, anchor='center')
 
-# -------------------------------------------
-# Other Frames Setup
-# -------------------------------------------
 
-# Function to create a standard frame with title and back button
+
 def setup_frame(frame, title_text, back_command):
     title = tk.Label(frame, text=title_text, font=("times new roman", 40, "bold"), bg="#69359c", fg="white")
     title.place(x=0, y=0, relwidth=1, height=70)
     back_button = tk.Button(frame, text="Back", font=("Arial", 14), command=back_command)
     back_button.place(relx=0.5, rely=0.9, anchor='center')
 
-# Setting up Deposit Book Frame
-setup_frame(deposit_book_frame, "Deposit Book", lambda: show_frame(user_dashboard_frame))
-
-
-
-# Setting up Browse Books Frame
-setup_frame(browse_books_frame, "Browse Books", lambda: show_frame(user_dashboard_frame))
-
-# Setting up Account Details Frame
-setup_frame(account_details_frame, "Account Details", lambda: show_frame(profile_frame))
-
-
-
-# Setting up Borrowing History Frame
-setup_frame(borrowing_history_frame, "Borrowing History", lambda: show_frame(profile_frame))
-
-# -------------------------------------------
-# Initial Frame Display
-# -------------------------------------------
 
 # Show Login Frame Initially
 show_frame(login_frame)

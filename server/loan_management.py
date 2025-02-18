@@ -19,7 +19,7 @@ class Loan_management:
                     (book_id, user_id)
                 )
         if borrowed_book:
-                    # Remove the book from the borrowed_books table
+
                     database.execute_query(
                         'DELETE FROM borrowed_books WHERE book_id = ? AND user_id = ?',
                         (book_id, user_id)
@@ -31,17 +31,17 @@ class Loan_management:
     def borrow_book(self, user_id, book_id):
         database = Database()
         
-        # Get the current date and calculate the return date
+
         borrow_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         return_date = (datetime.now() + timedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')
 
-        # Insert the borrowing record into the borrowed_books table
+
         database.execute_query('''
             INSERT INTO borrowed_books (book_id, user_id, borrow_date, return_date, status)
             VALUES (?, ?, ?, ?, ?)
         ''', (book_id, user_id, borrow_date, return_date, 'borrowed'))
 
-        # Update the status of the book in the books table
+
         database.execute_query('''
             UPDATE books
             SET status = 'borrowed'
@@ -54,7 +54,7 @@ class Loan_management:
         database = Database()
         current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # Update status of overdue books
+  
         database.execute_query('''
             UPDATE borrowed_books
             SET status = 'overdue'
@@ -71,7 +71,7 @@ class Loan_management:
     ''')
     
     def get_overdue_books(self, user_id):
-        database = Database()  # Assuming the Database object is defined and works as expected
+        database = Database()  
         query = '''
         SELECT b.book_id, bo.title
         FROM borrowed_books b

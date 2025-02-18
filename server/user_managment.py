@@ -39,3 +39,4 @@ class User:
          database = Database()
          database.execute_query("UPDATE users SET username = ?, password = ? WHERE id = ?", 
                     (username, password, id))
+         

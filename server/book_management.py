@@ -1,18 +1,21 @@
 from db_utils import Database
 
 
-class Book_management:
+class Book:
+    def __init__(self):
+        self.title = ""
+        self.author = ""
 
+        
     def bubble_sort_titles(self, books):
    
         n = len(books)
-            
-        # Extract the titles and their associated book data
+        
         for i in range(n):
             for j in range(0, n - i - 1):
-                # Compare titles (index 1 is the title)
+
                 if books[j][1].lower() > books[j + 1][1].lower():  
-                    books[j], books[j + 1] = books[j + 1], books[j]  # Swap books
+                    books[j], books[j + 1] = books[j + 1], books[j]  
 
         return books
     
@@ -21,7 +24,7 @@ class Book_management:
         books = database.fetch_query("SELECT id, title, author, status FROM books")
         
 
-        # Sort the books by title using bubble sort
+
         return self.bubble_sort_titles(books)
 
     def get_book(self, book_id):
@@ -52,3 +55,9 @@ class Book_management:
         database = Database()
         database.execute_query("UPDATE books SET isbn = ?, title = ? , author = ?, genre = ?, summary= ?, status= ? WHERE id = ?", 
                         (isbn,book_title, book_author, book_genre,book_summary, book_status, id))
+        
+    def get_title(self):
+        return self.title
+    
+    def get_author(self):
+        return self.author

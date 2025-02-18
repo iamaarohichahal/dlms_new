@@ -36,10 +36,10 @@ class Database:
                        username TEXT UNIQUE NOT NULL,
                        password TEXT NOT NULL)
                        ''')
-        # Enable foreign key constraints in SQLite
+        
         self.cursor.execute('PRAGMA foreign_keys = ON;')
 
-        # Create the borrowed_books table
+        #borrowed_books table
         self.cursor.execute('''
                         CREATE TABLE IF NOT EXISTS borrowed_books (
                             book_id INTEGER NOT NULL,
@@ -59,12 +59,6 @@ class Database:
 
     
     def execute_query(self, query, params=None):
-        """
-        Execute a query that doesn't return results (e.g., INSERT, UPDATE, DELETE).
-        
-        :param query: The SQL query to execute.
-        :param params: Optional tuple of parameters to pass into the query.
-        """
         try:
             if not self.conn:
                 raise ConnectionError("Database not connected.")
@@ -77,13 +71,6 @@ class Database:
             raise
 
     def fetch_query(self, query, params=None):
-        """
-        Execute a query that fetches results (e.g., SELECT).
-        
-        :param query: The SQL query to execute.
-        :param params: Optional tuple of parameters to pass into the query.
-        :return: List of tuples containing the query results.
-        """
         try:
             if not self.conn:
                 raise ConnectionError("Database not connected.")
@@ -97,9 +84,6 @@ class Database:
     
 
     def close(self):
-            """
-            Closes the database connection.
-            """
             self.conn.close()
 
 
